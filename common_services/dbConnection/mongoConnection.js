@@ -3,7 +3,7 @@ let mongoOptions = {
   server: {poolSize: 20},
   useNewUrlParser: true
 };
-const mongoConnectionURL = 'mongodb+srv://supermario:supermario@cluster0.naqdh.mongodb.net/test';
+const mongoConnectionURL = 'mongodb+srv://supermario:supermario@cluster0.naqdh.mongodb.net/supermario?retryWrites=true&w=majority';
 MongoClient.connect(mongoConnectionURL, mongoOptions, function (err, database) {
   if (err) {
     console.log(">>>>>>>>>>>>>>",err)
