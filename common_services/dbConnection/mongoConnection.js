@@ -3,7 +3,7 @@ let mongoOptions = {
   server: {poolSize: 20},
   useNewUrlParser: true
 };
-const mongoConnectionURL = 'mongodb://localhost:27017/supermarios';
+const mongoConnectionURL = 'mongodb+srv://supermario:supermario@cluster0.naqdh.mongodb.net/test';
 MongoClient.connect(mongoConnectionURL, mongoOptions, function (err, database) {
   if (err) {
     console.log(">>>>>>>>>>>>>>",err)
