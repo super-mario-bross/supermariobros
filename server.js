@@ -5,7 +5,7 @@ const bodyParser                             = require('body-parser');
 
 const app                                    = express();
 
-app.set('port', process.env.PORT || 5000);
+app.set('port', process.env.PORT || 3000);
 
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 1000000}));
 app.use(bodyParser.json({limit: '50mb'}));
@@ -29,6 +29,6 @@ require('./modules')
 require('./common_services/dbConnection/mongoConnection')
 
 
-app.listen(process.env.PORT || 5000, ()=>{
-  console.log("server started on::",process.env.PORT || 5000)
+app.listen(process.env.PORT || 3000, ()=>{
+  console.log("server started on::",process.env.PORT || 3000)
 })
