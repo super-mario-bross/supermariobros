@@ -90,7 +90,15 @@ exports.reveiwByIdQuery = id => {
     }
     sql.append(sql.glue(updates, " , "));
     sql.append(SQL`WHERE uuid = ${data.reviewId}`);
-    console.log(">>",sql)
+    return sql;
+  };
+  
+  exports.getReviewAndRatingCount = (options) => {
+    const sql = SQL`SELECT COUNT(uuid) from rating_n_reviews `;
+    sql.append(SQL` WHERE entity=${options.entity_id}`);
+    if (!_.isNaN(options.filterByRating) && parseInt(options.filterByRating) > 0) {
+        sql.append(SQL` AND rating=${parseInt(options.filterByRating)}`);
+    }
     return sql;
   };
   

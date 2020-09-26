@@ -94,11 +94,32 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
     }
   };
 
+  const getReviewAndRatingCount = async (logTrace, options, client = fastify.pg) => {
+    fastify.log.debug({
+      traceHeaders: logTrace,
+      message: `Invoking repository to get review and ratings count by entity_id ${options.entity_id}`
+    });
+    try {
+      const sql = queries.getReviewAndRatingCount(options);
+      const result = await client.query(sql);
+      return result.rows;
+    } catch (err) {
+      fastify.log.error({
+        traceHeaders: logTrace,
+        message: "Request Failed for getting  review and ratings count by entity_id",
+        data: `${options.entity_id}`,
+        err
+      });
+      throw dbError(err);
+    }
+  };
+
   fastify.decorate("reviewRepository", {
     create,
     getReviewById,
     getReviewAndRatingByEntity,
-    updateReviewById
+    updateReviewById,
+    getReviewAndRatingCount,
   });
 
   next();
