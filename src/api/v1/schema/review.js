@@ -1,3 +1,5 @@
+const { httpResponse } = require("./http-responses");
+
 const createReview = {
   tags: ["Reviews & Rating"],
   response: {
@@ -12,7 +14,8 @@ const createReview = {
         rating: { type: "number", maximum: 5, minimum: 1 },
         sentimentScore: { type: "string" },
         uuid: { type: "string" }
-      }
+      },
+      ...httpResponse
     }
   },
   body: {
@@ -35,7 +38,8 @@ const getReviewsAndRatings = {
     200: {
       type: "object",
       description: "get reviews by query strings"
-    }
+    },
+    ...httpResponse
   },
   querystring: {
     type: "object",
@@ -61,7 +65,8 @@ const updateIsHelpful = {
     200: {
       type: "object",
       description: "Succesfully updated review"
-    }
+    },
+    ...httpResponse
   },
   body: {
     type: "object",
