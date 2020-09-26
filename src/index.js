@@ -64,7 +64,6 @@ const init = () => {
   return fastify;
 };
 
-
 const create = () => {
   const fastify = init();
 

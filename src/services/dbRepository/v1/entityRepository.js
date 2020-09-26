@@ -1,7 +1,5 @@
 const fp = require("fastify-plugin");
 
-const uuidv4 = require("uuid/v4");
-
 const errorHandlerFactory = require("../../../utilities/responseHandler/errorHandler");
 const queries = require("./queryBuilder/entitiesQueries");
 
@@ -47,7 +45,6 @@ module.exports = fp(function entity(fastify, options, next) {
       throw dbError(err);
     }
   };
-
 
   fastify.decorate("entityRepository", {
     getEntityById,

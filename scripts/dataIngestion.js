@@ -9,7 +9,7 @@ const _ = require("lodash");
 const uuidv4 = require("uuid/v4");
 const Sentiment = require("sentiment");
 const sentiment = new Sentiment();
-const chalk = require('chalk')
+const chalk = require("chalk");
 
 const { parseError } = require("../src/utilities/index");
 const { BATCH_SIZE } = require("../src/utilities/constants");
@@ -29,24 +29,27 @@ const validateRows = (rows, validationErrors) => {
   return rows.map((row, index) => {
     let isValid = true;
     let msg = ``;
-    if (!row['Product ID'] || (row["Product ID"] && isNaN(row["Product ID"]))) {
+    if (!row["Product ID"] || (row["Product ID"] && isNaN(row["Product ID"]))) {
       msg += `INVALID FORMAT - Product ID should be a positive number greater than 0 | `;
       isValid = false;
     }
-    if (!row['author id'] || (row["author id"] && isNaN(row["author id"]))) {
+    if (!row["author id"] || (row["author id"] && isNaN(row["author id"]))) {
       msg += `INVALID FORMAT - author id should be a positive number greater than 0 | `;
       isValid = false;
     }
-    if (!row['Rating'] || (row["Rating"] && isNaN(row["Rating"]) && row["Rating"] <= 5)) {
+    if (
+      !row["Rating"] ||
+      (row["Rating"] && isNaN(row["Rating"]) && row["Rating"] <= 5)
+    ) {
       msg += `INVALID FORMAT - Rating should be a postive number greater than 0 and less than 5 |`;
       isValid = false;
     }
     if (!isValid) {
       validationErrors[`ROW - ${index + 1}`] = {
-          error : msg,
-          data : row,
-          skipped : true
-      }
+        error: msg,
+        data: row,
+        skipped: true
+      };
       return null;
     }
     return row;
@@ -73,7 +76,7 @@ exports.dataIngestion = async () => {
     });
 
     /**
-     * retrieve and validate data ingestion file 
+     * retrieve and validate data ingestion file
      */
     const RnRDataPath = path.resolve("./scripts/data/reviews_rating_data.csv");
     if (!fs.existsSync(RnRDataPath)) {
@@ -84,10 +87,10 @@ exports.dataIngestion = async () => {
     }
 
     /**
-     * clear previous reports 
+     * clear previous reports
      */
     const pathToReport = "./scripts/data/reports/dataIngestion.json";
-    fs.writeFileSync(path.resolve(pathToReport), JSON.stringify({}), 'utf8');
+    fs.writeFileSync(path.resolve(pathToReport), JSON.stringify({}), "utf8");
 
     /**
      * parse CSV -validate and process
@@ -129,10 +132,14 @@ exports.dataIngestion = async () => {
           0
       });
     });
-    rows=undefined; //dereference memory
+    rows = undefined; //dereference memory
     log(chalk.yellow(`Total products :: ${products.length}`));
     const productsBatches = _.chunk(products, BATCH_SIZE);
-    log(chalk.yellow(`Total Batches generated for products :: ${productsBatches.length}`));
+    log(
+      chalk.yellow(
+        `Total Batches generated for products :: ${productsBatches.length}`
+      )
+    );
 
     const promisesProducts = productsBatches.map((chunk, index) => {
       return client.query(insertEntities(chunk)).catch(err => {
@@ -148,7 +155,7 @@ exports.dataIngestion = async () => {
      */
     await Promise.all(promisesProducts);
     log(chalk.bold.green(`products upserted:: ${products.length}\n`));
-    products=undefined; //dereference memory
+    products = undefined; //dereference memory
 
     const allProducts = await client.query(getAllEntities());
     log(chalk.yellow(`total review recieved:: ${reviews.length}`));
@@ -177,18 +184,34 @@ exports.dataIngestion = async () => {
     await Promise.all(promisesReviews);
 
     log(chalk.bold.green(`total review upserted:: ${reviews.length}\n`));
-    reviews=undefined; //dereference memory
+    reviews = undefined; //dereference memory
 
     if (Object.keys(validationErrors).length) {
-        fs.writeFileSync(pathToReport, JSON.stringify({
-            TIME_EXECUTED : new Date(),
-            ERRORS : validationErrors
-        },null,"\t"), 'utf8');
+      fs.writeFileSync(
+        pathToReport,
+        JSON.stringify(
+          {
+            TIME_EXECUTED: new Date(),
+            ERRORS: validationErrors
+          },
+          null,
+          "\t"
+        ),
+        "utf8"
+      );
 
       log(
-        chalk.bold.red(`total invalid rows in CSV :: ${Object.keys(validationErrors).length}\n`)
+        chalk.bold.red(
+          `total invalid rows in CSV :: ${
+            Object.keys(validationErrors).length
+          }\n`
+        )
       );
-      log(chalk.bold.cyan(`::check report for detailed errors::\n${pathToReport}\n`))
+      log(
+        chalk.bold.cyan(
+          `::check report for detailed errors::\n${pathToReport}\n`
+        )
+      );
     }
 
     console.log(chalk.bold(":: SCRIPT ENDED - Data Ingestion ::\n"));

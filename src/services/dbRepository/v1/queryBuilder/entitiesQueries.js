@@ -57,7 +57,7 @@ exports.updateRatingsBulk = data => {
   );
   sql.append(SQL` END`);
   return sql;
-}
+};
 
 exports.entityByIdQuery = id => {
   const sql = SQL`SELECT * FROM entities`;
@@ -65,8 +65,7 @@ exports.entityByIdQuery = id => {
   return sql;
 };
 
-
-exports.updateEntityById = (data) => {
+exports.updateEntityById = data => {
   const sql = SQL`UPDATE entities SET `;
   const updates = [];
 

@@ -3,7 +3,6 @@ const { createReview } = require("../handlers/createReview");
 const { getRatingsAndReviews } = require("../handlers/getReviewAndRatings");
 const { updateIsHelpful } = require("../handlers/updateIsHelpful");
 
-
 module.exports = async function(fastify) {
   /**
    * create facility
