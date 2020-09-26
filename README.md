@@ -18,6 +18,7 @@ PostgreSQL configurations for connection to database.
  - **DB_NAME:** PostgreSQL database name.
  - **DB_USER:** PostgreSQL database user-name.
  - **DB_PASSWORD:** PostgreSQL database password.
+ - **DB_MIGRATION_VERSION:** PostgreSQL database password.
  - **DB_MAX_CONNECTION:** PostgreSQL database config for connections pool.
  - **DB_SCHEMA:** PostgreSQL database schema name.
  - **NODE_ENV:** Node environment

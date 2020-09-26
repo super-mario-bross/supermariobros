@@ -1,0 +1,126 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: fastify-swagger
+schemes:
+  - http
+  - https
+paths:
+  /v1/reviewAndRatings:
+    post:
+      tags:
+        - Reviews & Rating
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            required:
+              - entity
+              - rating
+              - author
+            properties:
+              entity:
+                type: string
+              author:
+                type: number
+              title:
+                type: string
+              reviewDesc:
+                type: string
+              rating:
+                type: number
+                maximum: 5
+                minimum: 1
+            additionalProperties: false
+      responses:
+        '200':
+          schema:
+            type: object
+            description: Success review created response
+            properties:
+              entity:
+                type: string
+              author:
+                type: number
+              title:
+                type: string
+              reviewDesc:
+                type: string
+              rating:
+                type: number
+                maximum: 5
+                minimum: 1
+              sentimentScore:
+                type: string
+              uuid:
+                type: string
+          description: Success review created response
+    get:
+      tags:
+        - Reviews & Rating
+      parameters:
+        - type: string
+          required: true
+          name: entity_id
+          in: query
+        - type: string
+          required: false
+          name: limit
+          in: query
+        - type: string
+          required: false
+          name: offset
+          in: query
+        - type: string
+          enum:
+            - created_at
+            - is_helpful
+            - is_not_helpful
+            - rating
+          required: false
+          name: sort_key
+          in: query
+        - type: string
+          enum:
+            - ASC
+            - DESC
+          required: false
+          name: sort_order
+          in: query
+        - type: string
+          maximum: 5
+          minimum: 1
+          required: false
+          name: filterByRating
+          in: query
+      responses:
+        '200':
+          schema:
+            type: object
+            description: get reviews by query strings
+          description: get reviews by query strings
+  /v1/reviewAndRatings/updateIsHelpful:
+    put:
+      tags:
+        - Reviews & Rating
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            required:
+              - reviewId
+              - isHelpful
+            properties:
+              reviewId:
+                type: string
+              isHelpful:
+                type: boolean
+            additionalProperties: false
+      responses:
+        '200':
+          schema:
+            type: object
+            description: Succesfully updated review
+          description: Succesfully updated review

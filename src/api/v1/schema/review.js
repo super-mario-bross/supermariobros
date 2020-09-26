@@ -1,4 +1,20 @@
 const createReview = {
+  tags: ["Reviews & Rating"],
+  response: {
+    200: {
+      type: "object",
+      description: "Success review created response",
+      properties: {
+        entity: { type: "string" },
+        author: { type: "number" },
+        title: { type: "string" },
+        reviewDesc: { type: "string" },
+        rating: { type: "number", maximum: 5, minimum: 1 },
+        sentimentScore: { type: "string" },
+        uuid: { type: "string" }
+      }
+    }
+  },
   body: {
     type: "object",
     required: ["entity", "rating", "author"],
@@ -14,6 +30,13 @@ const createReview = {
 };
 
 const getReviewsAndRatings = {
+  tags: ["Reviews & Rating"],
+  response: {
+    200: {
+      type: "object",
+      description: "get reviews by query strings"
+    }
+  },
   querystring: {
     type: "object",
     required: ["entity_id"],
@@ -33,6 +56,13 @@ const getReviewsAndRatings = {
 };
 
 const updateIsHelpful = {
+  tags: ["Reviews & Rating"],
+  response: {
+    200: {
+      type: "object",
+      description: "Succesfully updated review"
+    }
+  },
   body: {
     type: "object",
     required: ["reviewId", "isHelpful"],
