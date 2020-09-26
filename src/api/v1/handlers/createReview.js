@@ -30,7 +30,7 @@ module.exports.createReview = fastify => async (request, reply) => {
   let dataToCreate ={
     entity: request.body.entity,
     author: request.body.author,
-    title : request.body.entity ? request.body.entity : null,
+    title : request.body.title ? request.body.title : null,
     reviewDesc : request.body.reviewDesc ? request.body.reviewDesc : null,
     rating : request.body.rating,
     sentimentScore: request.body.sentimentScore ? request.body.sentimentScore : 0,
@@ -40,5 +40,5 @@ module.exports.createReview = fastify => async (request, reply) => {
     request.logTrace,
     dataToCreate
   );
-  reply.code(CREATED).send(reviewData);
+  reply.code(CREATED).send(dataToCreate);
 };
