@@ -56,7 +56,7 @@ exports.calculateRating = async () => {
                 } Products\n`)
         );
 
-        log(chalk.bold.green(`::check report for more details::\n${pathToReport}\n`))
+        log(chalk.bold.green(`::check report for rating and sentiment annalysis::\n${pathToReport}\n`))
 
         fs.writeFileSync(pathToReport, JSON.stringify({}), 'utf8');
 
@@ -69,7 +69,7 @@ exports.calculateRating = async () => {
 
         process.exit();
     } catch (error) {
-        console.log("Something Went Wrogn!", parseError(error));
+        console.log("Something Went Wrong!", parseError(error));
         process.exit();
     }
 };

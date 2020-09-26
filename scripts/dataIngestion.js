@@ -57,6 +57,9 @@ exports.dataIngestion = async () => {
   try {
     console.log(chalk.bold(":: SCRIPT STARTED - Data Ingestion ::\n"));
 
+    /**
+     * create DB Client
+     */
     const client = new Client({
       user: DB_USER,
       host: DB_HOST,
@@ -69,6 +72,9 @@ exports.dataIngestion = async () => {
       process.exit();
     });
 
+    /**
+     * retrieve and validate data ingestion file 
+     */
     const RnRDataPath = path.resolve("./scripts/data/reviews_rating_data.csv");
     if (!fs.existsSync(RnRDataPath)) {
       console.error(
@@ -76,11 +82,16 @@ exports.dataIngestion = async () => {
       );
       process.exit();
     }
-    const pathToReport = "./scripts/data/reports/dataIngestion.json";
 
+    /**
+     * clear previous reports 
+     */
+    const pathToReport = "./scripts/data/reports/dataIngestion.json";
     fs.writeFileSync(path.resolve(pathToReport), JSON.stringify({}), 'utf8');
 
-
+    /**
+     * parse CSV -validate and process
+     */
     let rows = await csvtojson({ delimiter: "," }).fromFile(RnRDataPath);
     if (!rows.length) {
       console.error("Empty data ingestion file detected! , skipping!");
@@ -89,6 +100,7 @@ exports.dataIngestion = async () => {
 
     log(chalk.yellow(`Total rows recieved :: ${rows.length}`));
     const validationErrors = {};
+
     rows = _.compact(validateRows(rows, validationErrors));
 
     log(chalk.yellow(`Total rows after validating :: ${rows.length}\n`));
@@ -117,7 +129,7 @@ exports.dataIngestion = async () => {
           0
       });
     });
-    rows=undefined;
+    rows=undefined; //dereference memory
     log(chalk.yellow(`Total products :: ${products.length}`));
     const productsBatches = _.chunk(products, BATCH_SIZE);
     log(chalk.yellow(`Total Batches generated for products :: ${productsBatches.length}`));
@@ -131,10 +143,12 @@ exports.dataIngestion = async () => {
         process.exit();
       });
     });
-
+    /**
+     * upsert Products
+     */
     await Promise.all(promisesProducts);
     log(chalk.bold.green(`products upserted:: ${products.length}\n`));
-    products=undefined;
+    products=undefined; //dereference memory
 
     const allProducts = await client.query(getAllEntities());
     log(chalk.yellow(`total review recieved:: ${reviews.length}`));
@@ -157,11 +171,13 @@ exports.dataIngestion = async () => {
         );
       });
     });
-
+    /**
+     * upsert reviews
+     */
     await Promise.all(promisesReviews);
 
     log(chalk.bold.green(`total review upserted:: ${reviews.length}\n`));
-    reviews=undefined;
+    reviews=undefined; //dereference memory
 
     if (Object.keys(validationErrors).length) {
         fs.writeFileSync(pathToReport, JSON.stringify({
@@ -179,7 +195,7 @@ exports.dataIngestion = async () => {
 
     process.exit();
   } catch (error) {
-    console.log("Something Went Wrogn!", parseError(error));
+    console.log("Something Went Wrong!", parseError(error));
     process.exit();
   }
 };
