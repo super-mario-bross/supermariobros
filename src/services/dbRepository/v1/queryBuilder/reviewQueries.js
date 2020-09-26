@@ -9,7 +9,8 @@ exports.insertReviewsBulk = reviews => {
                     title,
                     review_desc,
                     rating,
-                    sentiment_score
+                    sentiment_score,
+                    is_helpful
                   )
                 VALUES `;
   const rows = [];
@@ -21,7 +22,8 @@ exports.insertReviewsBulk = reviews => {
                  ${review.title || null},
                  ${review.reviewDesc || null},
                  ${review.rating},
-                 ${review.sentimentScore})`
+                 ${review.sentimentScore},
+                 ${review.isHelpful || 0})`
     );
   });
   sql.append(sql.glue(rows, " , "));
@@ -29,7 +31,8 @@ exports.insertReviewsBulk = reviews => {
                     SET title = EXCLUDED.title,
                         review_desc = EXCLUDED.review_desc,
                         rating = EXCLUDED.rating,
-                        sentiment_score = EXCLUDED.sentiment_score`);
+                        sentiment_score = EXCLUDED.sentiment_score,
+                        is_helpful = EXCLUDED.is_helpful`);
   return sql;
 };
 

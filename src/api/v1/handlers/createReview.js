@@ -24,6 +24,13 @@ module.exports.createReview = fastify => async (request, reply) => {
       request.body.reviewDesc
     ).score;
   }
+  if (
+    request.body.reviewDesc &&
+    request.body.reviewDesc.length > 300 &&
+    request.body.sentimentScore > 0
+  ) {
+    request.body.isHelpful = 1;
+  }
 
   if (!entity.length) {
     return serviceErrorHandler(BAD_REQUEST, "INVALID_ENTITY_ID", {
@@ -38,7 +45,8 @@ module.exports.createReview = fastify => async (request, reply) => {
     rating: request.body.rating,
     sentimentScore: request.body.sentimentScore
       ? request.body.sentimentScore
-      : 0
+      : 0,
+    isHelpful: request.body.isHelpful
   };
 
   await fastify.reviewRepository.create(request.logTrace, dataToCreate);
