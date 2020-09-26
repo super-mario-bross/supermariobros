@@ -29,7 +29,20 @@ const getReviewsAndRatings = {
   }
 };
 
+const updateIsHelpful = {
+  body: {
+    type: "object",
+    required: ["reviewId","isHelpful"],
+    properties: {
+      reviewId: { type: "string" },
+      isHelpful: { type: "boolean" },
+    },
+    additionalProperties: false
+  }
+};
+
 module.exports = {
   createReview,
-  getReviewsAndRatings
+  getReviewsAndRatings,
+  updateIsHelpful
 };

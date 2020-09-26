@@ -34,10 +34,10 @@ exports.insertReviewsBulk = reviews => {
 };
 
 exports.getAllReviews = () =>
-  SQL`SELECT entity,rating,sentiment_score FROM rating_n_reviews WHERE 1=1`;
+    SQL`SELECT entity,rating,sentiment_score FROM rating_n_reviews WHERE 1=1`;
 
 exports.reviewAndRatingByEntityQuery = (options) => {
-    const sql = SQL`SELECT * FROM rating_n_reviews`;
+    const sql = SQL`SELECT uuid as review_id,entity,author,title,review_desc, rating, is_helpful,is_not_helpful,sentiment_score,updated_at,created_at FROM rating_n_reviews`;
     sql.append(SQL` WHERE entity=${options.entity_id}`);
     if (!_.isNaN(options.filterByRating) && parseInt(options.filterByRating) > 0) {
         sql.append(SQL` AND rating=${parseInt(options.filterByRating)}`);
@@ -71,3 +71,26 @@ exports.reviewAndRatingByEntityQuery = (options) => {
     }
     return sql;
 };
+
+exports.reveiwByIdQuery = id => {
+    const sql = SQL`SELECT * FROM rating_n_reviews`;
+    sql.append(SQL` WHERE uuid=${id}`);
+    return sql;
+  };
+
+
+  exports.updateReviewById = (data) => {
+    const sql = SQL`UPDATE rating_n_reviews SET `;
+    const updates = [];
+    if(data.isHelpful === true){
+        updates.push(SQL`is_helpful = is_helpful+1`);
+    }
+    if(data.isHelpful === false){
+        updates.push(SQL`is_not_helpful = is_not_helpful+1`);
+    }
+    sql.append(sql.glue(updates, " , "));
+    sql.append(SQL`WHERE uuid = ${data.reviewId}`);
+    console.log(">>",sql)
+    return sql;
+  };
+  

@@ -5,11 +5,9 @@ const Messages = {
     en: "Invalid entity {{entity_id}}",
     es: "EntityIs {{sellerId}} no válido"
   },
-  INVALID_FACILITY_INFO: {
-    en:
-      "Invalid sellerId {{sellerId}} or facilityId {{facilityId}} for tenant {{tenantId}}",
-    es:
-      "Vendedor {{sellerId}} o instalación {{installationId}} no válida para el inquilino {{tenantId}}"
+  INVALID_REVIEW_ID: {
+    en: "Invalid review id {{review_id}}",
+    es: "ReviewIds {{review_id}} no válido"
   }
 };
 

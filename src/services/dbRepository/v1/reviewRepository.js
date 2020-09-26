@@ -34,13 +34,13 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
     }
   };
 
-  const getEntityById = async (logTrace, id, client = fastify.pg) => {
+  const getReviewById = async (logTrace, id, client = fastify.pg) => {
     fastify.log.debug({
       traceHeaders: logTrace,
-      message: `Invoking repository to get Entity by entity_id ${id}`
+      message: `Invoking repository to get review by review ${id}`
     });
     try {
-      const sql = queries.entityByIdQuery(id);
+      const sql = queries.reveiwByIdQuery(id);
       const result = await client.query(sql);
       return result.rows;
     } catch (err) {
@@ -74,10 +74,31 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
     }
   };
 
+  const updateReviewById = async (logTrace, data, client = fastify.pg) => {
+    fastify.log.debug({
+      traceHeaders: logTrace,
+      message: `Invoking repository to update review by reviewId ${data.reviewId}`
+    });
+    try {
+      const sql = queries.updateReviewById(data);
+      const result = await client.query(sql);
+      return result.rows;
+    } catch (err) {
+      fastify.log.error({
+        traceHeaders: logTrace,
+        message: "Request Failed for updating  review by reviewId",
+        data: `${data.reviewId}`,
+        err
+      });
+      throw dbError(err);
+    }
+  };
+
   fastify.decorate("reviewRepository", {
     create,
-    getEntityById,
-    getReviewAndRatingByEntity
+    getReviewById,
+    getReviewAndRatingByEntity,
+    updateReviewById
   });
 
   next();
