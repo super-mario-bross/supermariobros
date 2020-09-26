@@ -1,7 +1,6 @@
 const schema = require("../schema");
 const { createReview } = require("../handlers/createReview");
 
-
 module.exports = async function(fastify) {
   /**
    * create facility

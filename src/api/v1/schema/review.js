@@ -1,11 +1,3 @@
-// const {
-//   FULFILLMENT_REQ_TYPE,
-//   FACILITY_PICKUP_TYPES,
-//   WAREHOUSE_TYPES,
-//   FACILITY_TYPES,
-//   FACILITY_DAYS
-// } = require("../../../utilities/constants");
-
 
 const createReview = {
   body: {

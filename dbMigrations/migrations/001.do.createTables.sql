@@ -15,11 +15,11 @@ CREATE TABLE rating_n_reviews (
 	uuid UUID NOT NULL,
 	entity UUID NOT NULL,
 	author integer NOT NULL,
-    title varchar(50) NOT NULL,
-	review_desc varchar(50) NOT NULL,
+    title varchar(200) NULL,
+	review_desc varchar(1000) NULL,
 	rating float NOT NULL,
-	is_helpful integer NOT NULL DEFAULT 0,
-	sentiment_score integer NOT NULL,
+	is_helpful integer DEFAULT 0,
+	sentiment_score integer NOT NULL DEFAULT 0,
 	updated_at timestamp with time zone DEFAULT timezone('UTC'::text, CURRENT_TIMESTAMP),
 	deleted_at timestamp with time zone  DEFAULT NULL,
     created_at timestamp with time zone DEFAULT timezone('UTC'::text, CURRENT_TIMESTAMP),
@@ -29,4 +29,4 @@ CREATE TABLE rating_n_reviews (
 WITH (
 	OIDS=FALSE
 );
-CREATE UNIQUE INDEX rating_n_reviews_unique_idx ON rating_n_reviews (entity_id,author);
+CREATE UNIQUE INDEX rating_n_reviews_unique_idx ON rating_n_reviews (entity,author);

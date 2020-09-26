@@ -1,4 +1,5 @@
 module.exports = {
+  BATCH_SIZE: 500,
   SELLER_TYPE: ["individual", "company"],
   SELLER_STATUS: ["active", "inactive", "deleted"],
   SELLER_APPROVAL_STATE: ["pending", "approved", "rejected"],
