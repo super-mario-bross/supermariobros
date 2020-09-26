@@ -2,25 +2,26 @@ require("dotenv").config();
 const { Client } = require("pg");
 const pgCamelCase = require("pg-camelcase");
 pgCamelCase.inject(require("pg"));
-
-const { parseError } = require("../src/utilities/index");
-const { BATCH_SIZE } = require("../src/utilities/constants");
-
 const path = require("path");
 const fs = require("fs");
 const csvtojson = require("csvtojson");
 const _ = require("lodash");
 const uuidv4 = require("uuid/v4");
+const Sentiment = require("sentiment");
+const sentiment = new Sentiment();
+
+const { parseError } = require("../src/utilities/index");
+const { BATCH_SIZE } = require("../src/utilities/constants");
+
 const {
   insertEntities,
   getAllEntities
 } = require("../src/services/dbRepository/v1/queryBuilder/entitiesQueries");
-
 const {
   insertReviewsBulk
 } = require("../src/services/dbRepository/v1/queryBuilder/reviewQueries");
-var Sentiment = require("sentiment");
-var sentiment = new Sentiment();
+
+const { calculateRating } = require("../src/utilities/ratingCalculator");
 
 const { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } = process.env;
 
@@ -93,8 +94,8 @@ exports.dataIngestion = async () => {
     }
 
     log(`Total rows recieved :: ${rows.length}`);
-
-    rows = _.compact(validateRows(rows));
+    const validationErrors = [];
+    rows = _.compact(validateRows(rows, validationErrors));
 
     log(`Total rows after validating :: ${rows.length}`);
 
@@ -122,7 +123,7 @@ exports.dataIngestion = async () => {
           0
       });
     });
-
+    log(`Total products :: ${products.length}`);
     const productsBatches = _.chunk(products, BATCH_SIZE);
     log(`Total Batches generated for products :: ${productsBatches.length}`);
 
@@ -165,6 +166,14 @@ exports.dataIngestion = async () => {
 
     log(`total review inserted:: ${reviews.length}`);
 
+    const reviewsWithRatings = calculateRating(reviews);
+
+    if (validationErrors.length) {
+      log(
+        `total invalid rows in CSV :: ${validationErrors.length}`,
+        validationErrors
+      );
+    }
     process.exit();
   } catch (error) {
     console.log("Something Went Wrogn!", parseError(error));

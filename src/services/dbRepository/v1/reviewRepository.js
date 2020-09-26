@@ -1,8 +1,6 @@
 const fp = require("fastify-plugin");
-    
-const uuidv4=require("uuid/v4")
 
-
+const uuidv4 = require("uuid/v4");
 
 const errorHandlerFactory = require("../../../utilities/responseHandler/errorHandler");
 const queries = require("./queryBuilder/reviewQueries");
@@ -16,7 +14,7 @@ module.exports = fp(function attributes(fastify, options, next) {
       message: `Invoking repository to create review  - ${reviewData.entity}`
     });
     try {
-      reviewData.uuid = uuidv4()
+      reviewData.uuid = uuidv4();
       const sql = queries.insertReviewsBulk([reviewData]);
       const result = await client.query(sql);
       fastify.log.debug({
@@ -36,12 +34,7 @@ module.exports = fp(function attributes(fastify, options, next) {
     }
   };
 
-
-  const getEntityById = async (
-    logTrace,
-    id,
-    client = fastify.pg
-  ) => {
+  const getEntityById = async (logTrace, id, client = fastify.pg) => {
     fastify.log.debug({
       traceHeaders: logTrace,
       message: `Invoking repository to get Entity by entity_id ${id}`
@@ -60,7 +53,6 @@ module.exports = fp(function attributes(fastify, options, next) {
       throw dbError(err);
     }
   };
-
 
   fastify.decorate("reviewRepository", {
     create,
