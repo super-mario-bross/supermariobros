@@ -1,1 +1,14 @@
-node_modules/
+node_modules
+.env
+.idea/
+coverage/
+.npmrc
+.talismanrc
+env/
+.DS_Store
+launch.json
+settings.json
+*.iml
+.history
+files
+coverage
