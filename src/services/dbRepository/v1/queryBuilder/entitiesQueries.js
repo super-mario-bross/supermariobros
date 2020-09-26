@@ -21,7 +21,7 @@ exports.getAllEntities = () =>
   SQL`SELECT uuid,entity_id FROM entities where 1=1`;
 
 exports.entityByIdQuery = id => {
-  const sql = SQL`SELECT uuid FROM entities`;
+  const sql = SQL`SELECT * FROM entities`;
   sql.append(SQL` WHERE uuid=${id}`);
   return sql;
 };

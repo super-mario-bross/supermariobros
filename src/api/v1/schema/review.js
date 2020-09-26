@@ -13,6 +13,23 @@ const createReview = {
   }
 };
 
+const getReviewsAndRatings = {
+  querystring: {
+    type: "object",
+    required: ["entity_id"],
+    properties: {
+      entity_id: { type: "string" },
+      limit: { type: "string" },
+      offset: { type: "string" },
+      sort_key: { type: "string"  , enum : [ 'created_at', 'is_helpful', 'is_not_helpful','rating']},
+      sort_order: { type: "string"  , enum : [ 'ASC', 'DESC']},
+      filterByRating: { type: "string", maximum: 5, minimum: 1 }
+    },
+    additionalProperties: false
+  }
+};
+
 module.exports = {
-  createReview
+  createReview,
+  getReviewsAndRatings
 };
