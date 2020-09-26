@@ -10,14 +10,14 @@ module.exports = async function(fastify) {
    */
   fastify.route({
     method: "POST",
-    url: "/reviewAndRatings/add",
+    url: "/reviewAndRatings",
     schema: schema.createReview,
     handler: createReview(fastify)
   });
 
   fastify.route({
     method: "GET",
-    url: "/reviewAndRatings/all",
+    url: "/reviewAndRatings",
     schema: schema.getReviewsAndRatings,
     handler: getRatingsAndReviews(fastify)
   });
