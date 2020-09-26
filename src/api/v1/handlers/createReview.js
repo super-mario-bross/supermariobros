@@ -45,7 +45,7 @@ module.exports.createReview = fastify => async (request, reply) => {
   );
   let entityInfo = await fastify.reviewRepository.getReviewAndRatingByEntity(
     request.logTrace,
-    { entity: request.body.entity }
+    { entity_id: request.body.entity }
   );
   const calculatedRatings = calculateRating(entityInfo);
   await fastify.entityRepository.updateEntityById(request.logTrace, Object.assign(calculatedRatings[request.body.entity], { entity_id: request.body.entity }))
