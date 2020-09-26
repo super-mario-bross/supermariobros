@@ -1,12 +1,11 @@
 const schema = require("../schema");
 const { createReview } = require("../handlers/createReview");
 const { getRatingsAndReviews } = require("../handlers/getReviewAndRatings");
-const { updateIsHelpful } = require("../handlers/updateIsHelpful");
+const {
+  updateReviewByUsersReaction
+} = require("../handlers/updateReviewByUsersReaction");
 
 module.exports = async function(fastify) {
-  /**
-   * create facility
-   */
   fastify.route({
     method: "POST",
     url: "/reviewAndRatings",
@@ -22,9 +21,9 @@ module.exports = async function(fastify) {
   });
 
   fastify.route({
-    method: "PUT",
-    url: "/reviewAndRatings/updateIsHelpful",
-    schema: schema.updateIsHelpful,
-    handler: updateIsHelpful(fastify)
+    method: "PATCH",
+    url: "/reviewAndRatings/updateReviewByUsersReaction",
+    schema: schema.updateReviewByUsersReaction,
+    handler: updateReviewByUsersReaction(fastify)
   });
 };

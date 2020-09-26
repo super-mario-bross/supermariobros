@@ -1,5 +1,6 @@
 const SQL = require("@nearform/sql");
 const _ = require("lodash");
+const { REACTIONS } = require("../../../../config");
 
 exports.insertReviewsBulk = reviews => {
   const sql = SQL`INSERT INTO rating_n_reviews(
@@ -87,12 +88,13 @@ exports.reveiwByIdQuery = id => {
 };
 
 exports.updateReviewById = data => {
+  const { userReaction } = data;
   const sql = SQL`UPDATE rating_n_reviews SET `;
   const updates = [];
-  if (data.isHelpful === true) {
+  if (userReaction === REACTIONS.IS_HELPFUL) {
     updates.push(SQL`is_helpful = is_helpful+1`);
   }
-  if (data.isHelpful === false) {
+  if (userReaction === REACTIONS.IS_NOT_HELPFUL) {
     updates.push(SQL`is_not_helpful = is_not_helpful+1`);
   }
   sql.append(sql.glue(updates, " , "));

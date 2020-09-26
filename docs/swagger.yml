@@ -32,13 +32,14 @@ paths:
                 type: number
                 maximum: 5
                 minimum: 1
-            additionalProperties: false
+            additionalProp1Properties: false
       responses:
         '200':
           schema:
             '400': &ref_0
               type: object
-              additionalProperties: true
+              description: error response
+              additionalProperties: false
               properties:
                 code:
                   type: string
@@ -53,11 +54,9 @@ paths:
                         type: string
                       message:
                         type: string
-            '401': *ref_0
             '403': *ref_0
             '404': *ref_0
             '409': *ref_0
-            '429': *ref_0
             '500': *ref_0
             type: object
             description: Success review created response
@@ -118,34 +117,23 @@ paths:
           name: filterByRating
           in: query
       responses:
-        '200':
-          schema:
-            type: object
-            description: get reviews by query strings
-          description: get reviews by query strings
         '400':
           schema: *ref_0
-          description: Default Response
-        '401':
-          schema: *ref_0
-          description: Default Response
+          description: error response
         '403':
           schema: *ref_0
-          description: Default Response
+          description: error response
         '404':
           schema: *ref_0
-          description: Default Response
+          description: error response
         '409':
           schema: *ref_0
-          description: Default Response
-        '429':
-          schema: *ref_0
-          description: Default Response
+          description: error response
         '500':
           schema: *ref_0
-          description: Default Response
-  /v1/reviewAndRatings/updateIsHelpful:
-    put:
+          description: error response
+  /v1/reviewAndRatings/updateReviewByUsersReaction:
+    patch:
       tags:
         - Reviews & Rating
       parameters:
@@ -155,37 +143,41 @@ paths:
             type: object
             required:
               - reviewId
-              - isHelpful
+              - userReaction
             properties:
               reviewId:
                 type: string
-              isHelpful:
-                type: boolean
-            additionalProperties: false
+              userReaction:
+                type: string
+                enum:
+                  - is_helpful
+                  - is_not_helpful
       responses:
         '200':
           schema:
             type: object
-            description: Succesfully updated review
-          description: Succesfully updated review
+            description: Succesfully updated user reaction to review
+            properties:
+              reviewId:
+                type: string
+              userReaction:
+                type: string
+                enum:
+                  - is_helpful
+                  - is_not_helpful
+          description: Succesfully updated user reaction to review
         '400':
           schema: *ref_0
-          description: Default Response
-        '401':
-          schema: *ref_0
-          description: Default Response
+          description: error response
         '403':
           schema: *ref_0
-          description: Default Response
+          description: error response
         '404':
           schema: *ref_0
-          description: Default Response
+          description: error response
         '409':
           schema: *ref_0
-          description: Default Response
-        '429':
-          schema: *ref_0
-          description: Default Response
+          description: error response
         '500':
           schema: *ref_0
-          description: Default Response
+          description: error response

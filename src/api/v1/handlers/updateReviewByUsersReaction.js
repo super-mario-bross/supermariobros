@@ -5,7 +5,10 @@ const errorHandlerFactory = require("../../../utilities/responseHandler/errorHan
  * @param {*} fastify instance
  */
 
-module.exports.updateIsHelpful = fastify => async (request, reply) => {
+module.exports.updateReviewByUsersReaction = fastify => async (
+  request,
+  reply
+) => {
   const { serviceErrorHandler } = errorHandlerFactory(fastify);
   const { reviewId } = request.body;
 

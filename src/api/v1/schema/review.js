@@ -28,17 +28,13 @@ const createReview = {
       reviewDesc: { type: "string" },
       rating: { type: "number", maximum: 5, minimum: 1 }
     },
-    additionalProperties: false
+    additionalProp1Properties: false
   }
 };
 
 const getReviewsAndRatings = {
   tags: ["Reviews & Rating"],
   response: {
-    200: {
-      type: "object",
-      description: "get reviews by query strings"
-    },
     ...httpResponse
   },
   querystring: {
@@ -59,28 +55,34 @@ const getReviewsAndRatings = {
   }
 };
 
-const updateIsHelpful = {
+const updateReviewByUsersReaction = {
   tags: ["Reviews & Rating"],
   response: {
     200: {
       type: "object",
-      description: "Succesfully updated review"
+      description: "Succesfully updated user reaction to review",
+      properties: {
+        reviewId: { type: "string" },
+        userReaction: {
+          type: "string",
+          enum: ["is_helpful", "is_not_helpful"]
+        }
+      }
     },
     ...httpResponse
   },
   body: {
     type: "object",
-    required: ["reviewId", "isHelpful"],
+    required: ["reviewId", "userReaction"],
     properties: {
       reviewId: { type: "string" },
-      isHelpful: { type: "boolean" }
-    },
-    additionalProperties: false
+      userReaction: { type: "string", enum: ["is_helpful", "is_not_helpful"] }
+    }
   }
 };
 
 module.exports = {
   createReview,
   getReviewsAndRatings,
-  updateIsHelpful
+  updateReviewByUsersReaction
 };

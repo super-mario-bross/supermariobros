@@ -1,7 +1,7 @@
 const httpResponseBasicErrorSchema = {
   type: "object",
   description: "error response",
-  additionalProperties: true,
+  additionalProperties: false,
   properties: {
     code: { type: "string" },
     message: { type: "string" },
