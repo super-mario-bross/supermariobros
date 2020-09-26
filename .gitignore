@@ -13,3 +13,4 @@ settings.json
 files
 coverage
 /scripts/generateData.js
+/scripts/data/reports/
