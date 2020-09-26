@@ -13,6 +13,7 @@
     "ajv-errors": "^1.0.1",
     "ajv-keywords": "^3.4.1",
     "csv-parser": "^2.3.3",
+    "csvtojson": "^2.0.10",
     "elastic-apm-node": "^3.5.0",
     "env-schema": "^0.1.0",
     "fastify": "^2.3.0",
@@ -33,7 +34,9 @@
     "pino-pretty": "^2.6.1",
     "postgrator": "^3.10.1",
     "qs": "^6.7.0",
-    "uuid": "^3.3.2"
+    "sentiment": "^5.0.2",
+    "uuid": "^3.3.2",
+    "uuidv4": "^6.2.3"
   },
   "engines": {
     "node": ">=10.*"
@@ -95,6 +98,7 @@
     "start": "node src/index.js | pino-pretty -c -t HH:MM:ss.l",
     "swagger": "node src/index.js docs | pino-pretty -c -t HH:MM:ss.l",
     "db-init": "node ./dbMigrations/index.js",
-    "dev": "nodemon -e js src/index.js | pino-pretty -c -t HH:MM:ss.l"
+    "dev": "nodemon -e js src/index.js | pino-pretty -c -t HH:MM:ss.l",
+    "seed": "node scripts/dataIngestion.js"
   }
 }
