@@ -1,5 +1,6 @@
 const { BAD_REQUEST, CREATED } = require("http-status-codes");
 const errorHandlerFactory = require("../../../utilities/responseHandler/errorHandler");
+const { calculateRating } = require("../../../utilities/ratingCalculator");
 var Sentiment = require("sentiment");
 var sentiment = new Sentiment();
 
@@ -13,7 +14,7 @@ module.exports.createReview = fastify => async (request, reply) => {
   /**
    * Validate product_id
    */
-  const entity = await fastify.reviewRepository.getEntityById(
+  const entity = await fastify.entityRepository.getEntityById(
     request.logTrace,
     request.body.entity
   );
@@ -35,14 +36,20 @@ module.exports.createReview = fastify => async (request, reply) => {
     title: request.body.title ? request.body.title : null,
     reviewDesc: request.body.reviewDesc ? request.body.reviewDesc : null,
     rating: request.body.rating,
-    sentimentScore: request.body.sentimentScore
-      ? request.body.sentimentScore
-      : 0
-  };
+    sentimentScore: request.body.sentimentScore ? request.body.sentimentScore : 0,
+  }
 
   const reviewData = await fastify.reviewRepository.create(
     request.logTrace,
     dataToCreate
   );
+  let entityInfo = await fastify.reviewRepository.getReviewAndRatingByEntity(
+    request.logTrace,
+    { entity: request.body.entity }
+  );
+  console.log(">>>>entityInfo>>>>", JSON.stringify(entityInfo))
+  const calculatedRatings = calculateRating(entityInfo);
+  console.log(">>>>calculatedRatings>>>>", JSON.stringify(calculatedRatings))
+  await fastify.entityRepository.updateEntityById(request.logTrace, Object.assign(calculatedRatings[request.body.entity], { entity_id: request.body.entity }))
   reply.code(CREATED).send(dataToCreate);
 };
