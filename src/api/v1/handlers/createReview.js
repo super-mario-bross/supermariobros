@@ -24,7 +24,6 @@ module.exports.createReview = fastify => async (request, reply) => {
       request.body.reviewDesc
     ).score;
   }
-  console.log(">>>>11??", request.body.reviewDesc.length);
   if (
     request.body.reviewDesc &&
     request.body.reviewDesc.length > 300 &&
