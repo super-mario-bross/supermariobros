@@ -1,0 +1,16 @@
+{
+	"TIME_EXECUTED": "2020-09-26T12:50:03.301Z",
+	"ERRORS": {
+		"ROW - 1": {
+			"error": "INVALID FORMAT - Product ID should be a positive number greater than 0 | INVALID FORMAT - author id should be a positive number greater than 0 | ",
+			"data": {
+				"author id": "",
+				"Product ID": "",
+				"Title": "",
+				"Review Text": "Absolutely wonderful - silky and sexy and comfortable",
+				"Rating": "4"
+			},
+			"skipped": true
+		}
+	}
+}

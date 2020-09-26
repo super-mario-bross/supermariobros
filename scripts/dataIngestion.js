@@ -9,6 +9,7 @@ const _ = require("lodash");
 const uuidv4 = require("uuid/v4");
 const Sentiment = require("sentiment");
 const sentiment = new Sentiment();
+const chalk = require('chalk')
 
 const { parseError } = require("../src/utilities/index");
 const { BATCH_SIZE } = require("../src/utilities/constants");
@@ -27,36 +28,25 @@ const log = (input, data) => console.log(input, data || "");
 const validateRows = (rows, validationErrors) => {
   return rows.map((row, index) => {
     let isValid = true;
-    let msg = `ROW - ${index + 1} `;
-    if (!row.hasOwnProperty("Product ID")) {
-      msg += ` REQUIRED - Product ID ,`;
+    let msg = ``;
+    if (!row['Product ID'] || (row["Product ID"] && isNaN(row["Product ID"]))) {
+      msg += `INVALID FORMAT - Product ID should be a positive number greater than 0 | `;
       isValid = false;
     }
-    if (!row.hasOwnProperty("author id")) {
-      msg += ` REQUIRED - author id ,`;
+    if (!row['author id'] || (row["author id"] && isNaN(row["author id"]))) {
+      msg += `INVALID FORMAT - author id should be a positive number greater than 0 | `;
       isValid = false;
     }
-    // if(!row['ReviewText']){
-    //     msg += ` REQUIRED - ReviewText id ,`
-    // }
-    if (!row.hasOwnProperty("Rating")) {
-      msg += ` REQUIRED - Rating ,`;
-      isValid = false;
-    }
-    if (row["Product ID"] && isNaN(row["Product ID"])) {
-      msg += ` INVALID FORMAT - Product ID should be a positive number greater than 0,`;
-      isValid = false;
-    }
-    if (row["author id"] && isNaN(row["author id"])) {
-      msg += ` INVALID FORMAT - author id should be a positive number greater than 0,`;
-      isValid = false;
-    }
-    if (row["Rating"] && isNaN(row["Rating"]) && row["Rating"] <= 5) {
-      msg += ` INVALID FORMAT - Rating should be a postive number greater than 0 and less than 5,`;
+    if (!row['Rating'] || (row["Rating"] && isNaN(row["Rating"]) && row["Rating"] <= 5)) {
+      msg += `INVALID FORMAT - Rating should be a postive number greater than 0 and less than 5 |`;
       isValid = false;
     }
     if (!isValid) {
-      validationErrors.push(msg + `\n`);
+      validationErrors[`ROW - ${index + 1}`] = {
+          error : msg,
+          data : row,
+          skipped : true
+      }
       return null;
     }
     return row;
@@ -65,6 +55,8 @@ const validateRows = (rows, validationErrors) => {
 
 exports.dataIngestion = async () => {
   try {
+    console.log(chalk.bold(":: SCRIPT STARTED - Data Ingestion ::\n"));
+
     const client = new Client({
       user: DB_USER,
       host: DB_HOST,
@@ -84,6 +76,10 @@ exports.dataIngestion = async () => {
       );
       process.exit();
     }
+    const pathToReport = "./scripts/data/reports/dataIngestion.json";
+
+    fs.writeFileSync(path.resolve(pathToReport), JSON.stringify({}), 'utf8');
+
 
     let rows = await csvtojson({ delimiter: "," }).fromFile(RnRDataPath);
     if (!rows.length) {
@@ -91,11 +87,11 @@ exports.dataIngestion = async () => {
       process.exit();
     }
 
-    log(`Total rows recieved :: ${rows.length}`);
-    const validationErrors = [];
+    log(chalk.yellow(`Total rows recieved :: ${rows.length}`));
+    const validationErrors = {};
     rows = _.compact(validateRows(rows, validationErrors));
 
-    log(`Total rows after validating :: ${rows.length}`);
+    log(chalk.yellow(`Total rows after validating :: ${rows.length}\n`));
 
     let products = [];
     let reviews = [];
@@ -121,9 +117,10 @@ exports.dataIngestion = async () => {
           0
       });
     });
-    log(`Total products :: ${products.length}`);
+    rows=undefined;
+    log(chalk.yellow(`Total products :: ${products.length}`));
     const productsBatches = _.chunk(products, BATCH_SIZE);
-    log(`Total Batches generated for products :: ${productsBatches.length}`);
+    log(chalk.yellow(`Total Batches generated for products :: ${productsBatches.length}`));
 
     const promisesProducts = productsBatches.map((chunk, index) => {
       return client.query(insertEntities(chunk)).catch(err => {
@@ -136,10 +133,11 @@ exports.dataIngestion = async () => {
     });
 
     await Promise.all(promisesProducts);
-    log(`products inserted:: ${products.length}`);
+    log(chalk.bold.green(`products upserted:: ${products.length}\n`));
+    products=undefined;
 
     const allProducts = await client.query(getAllEntities());
-    log(`total review recieved:: ${reviews.length}`);
+    log(chalk.yellow(`total review recieved:: ${reviews.length}`));
 
     reviews = reviews.map(review => {
       const prodUUID = _.find(allProducts.rows, {
@@ -162,14 +160,23 @@ exports.dataIngestion = async () => {
 
     await Promise.all(promisesReviews);
 
-    log(`total review inserted:: ${reviews.length}`);
+    log(chalk.bold.green(`total review upserted:: ${reviews.length}\n`));
+    reviews=undefined;
 
-    if (validationErrors.length) {
+    if (Object.keys(validationErrors).length) {
+        fs.writeFileSync(pathToReport, JSON.stringify({
+            TIME_EXECUTED : new Date(),
+            ERRORS : validationErrors
+        },null,"\t"), 'utf8');
+
       log(
-        `total invalid rows in CSV :: ${validationErrors.length}`,
-        validationErrors
+        chalk.bold.red(`total invalid rows in CSV :: ${Object.keys(validationErrors).length}\n`)
       );
+      log(chalk.bold.cyan(`::check report for detailed errors::\n${pathToReport}\n`))
     }
+
+    console.log(chalk.bold(":: SCRIPT ENDED - Data Ingestion ::\n"));
+
     process.exit();
   } catch (error) {
     console.log("Something Went Wrogn!", parseError(error));
