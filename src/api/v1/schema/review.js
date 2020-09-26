@@ -21,8 +21,11 @@ const getReviewsAndRatings = {
       entity_id: { type: "string" },
       limit: { type: "string" },
       offset: { type: "string" },
-      sort_key: { type: "string"  , enum : [ 'created_at', 'is_helpful', 'is_not_helpful','rating']},
-      sort_order: { type: "string"  , enum : [ 'ASC', 'DESC']},
+      sort_key: {
+        type: "string",
+        enum: ["created_at", "is_helpful", "is_not_helpful", "rating"]
+      },
+      sort_order: { type: "string", enum: ["ASC", "DESC"] },
       filterByRating: { type: "string", maximum: 5, minimum: 1 }
     },
     additionalProperties: false
@@ -32,10 +35,10 @@ const getReviewsAndRatings = {
 const updateIsHelpful = {
   body: {
     type: "object",
-    required: ["reviewId","isHelpful"],
+    required: ["reviewId", "isHelpful"],
     properties: {
       reviewId: { type: "string" },
-      isHelpful: { type: "boolean" },
+      isHelpful: { type: "boolean" }
     },
     additionalProperties: false
   }

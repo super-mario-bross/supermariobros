@@ -27,7 +27,7 @@ module.exports.createReview = fastify => async (request, reply) => {
 
   if (!entity.length) {
     return serviceErrorHandler(BAD_REQUEST, "INVALID_ENTITY_ID", {
-      entity_id:  request.body.entity
+      entity_id: request.body.entity
     });
   }
   let dataToCreate = {
@@ -36,18 +36,22 @@ module.exports.createReview = fastify => async (request, reply) => {
     title: request.body.title ? request.body.title : null,
     reviewDesc: request.body.reviewDesc ? request.body.reviewDesc : null,
     rating: request.body.rating,
-    sentimentScore: request.body.sentimentScore ? request.body.sentimentScore : 0,
-  }
+    sentimentScore: request.body.sentimentScore
+      ? request.body.sentimentScore
+      : 0
+  };
 
-  const reviewData = await fastify.reviewRepository.create(
-    request.logTrace,
-    dataToCreate
-  );
+  await fastify.reviewRepository.create(request.logTrace, dataToCreate);
   let entityInfo = await fastify.reviewRepository.getReviewAndRatingByEntity(
     request.logTrace,
     { entity_id: request.body.entity }
   );
   const calculatedRatings = calculateRating(entityInfo);
-  await fastify.entityRepository.updateEntityById(request.logTrace, Object.assign(calculatedRatings[request.body.entity], { entity_id: request.body.entity }))
+  await fastify.entityRepository.updateEntityById(
+    request.logTrace,
+    Object.assign(calculatedRatings[request.body.entity], {
+      entity_id: request.body.entity
+    })
+  );
   reply.code(CREATED).send(dataToCreate);
 };

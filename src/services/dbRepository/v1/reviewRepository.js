@@ -54,7 +54,11 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
     }
   };
 
-  const getReviewAndRatingByEntity = async (logTrace, options, client = fastify.pg) => {
+  const getReviewAndRatingByEntity = async (
+    logTrace,
+    options,
+    client = fastify.pg
+  ) => {
     fastify.log.debug({
       traceHeaders: logTrace,
       message: `Invoking repository to get review and ratings by entity_id ${options.entity_id}`
@@ -94,7 +98,11 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
     }
   };
 
-  const getReviewAndRatingCount = async (logTrace, options, client = fastify.pg) => {
+  const getReviewAndRatingCount = async (
+    logTrace,
+    options,
+    client = fastify.pg
+  ) => {
     fastify.log.debug({
       traceHeaders: logTrace,
       message: `Invoking repository to get review and ratings count by entity_id ${options.entity_id}`
@@ -106,7 +114,8 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
     } catch (err) {
       fastify.log.error({
         traceHeaders: logTrace,
-        message: "Request Failed for getting  review and ratings count by entity_id",
+        message:
+          "Request Failed for getting  review and ratings count by entity_id",
         data: `${options.entity_id}`,
         err
       });
@@ -119,7 +128,7 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
     getReviewById,
     getReviewAndRatingByEntity,
     updateReviewById,
-    getReviewAndRatingCount,
+    getReviewAndRatingCount
   });
 
   next();

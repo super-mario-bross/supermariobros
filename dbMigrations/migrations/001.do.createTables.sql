@@ -14,13 +14,14 @@ CREATE TABLE entities (
 WITH (
 	OIDS=FALSE
 );
+
 CREATE UNIQUE INDEX entity_unique_idx ON entities (entity_id);
 CREATE TABLE rating_n_reviews (
 	uuid UUID NOT NULL,
 	entity UUID NOT NULL,
 	author integer NOT NULL,
-    title varchar(200) NULL,
-	review_desc varchar(1000) NULL,
+    title varchar(500) NULL,
+	review_desc varchar(2000) NULL,
 	rating float NOT NULL,
 	is_helpful integer DEFAULT 0,
 	is_not_helpful integer DEFAULT 0,

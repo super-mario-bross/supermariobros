@@ -9,10 +9,14 @@ const _ = require("lodash");
 const uuidv4 = require("uuid/v4");
 const Sentiment = require("sentiment");
 const sentiment = new Sentiment();
-const chalk = require('chalk')
+const chalk = require("chalk");
 
 const { parseError } = require("../src/utilities/index");
-const { BATCH_SIZE } = require("../src/utilities/constants");
+const {
+  BATCH_SIZE,
+  MAX_DESCRIPTION_SIZE,
+  MAX_TITLE_SIZE
+} = require("../src/utilities/constants");
 
 const {
   insertEntities,
@@ -25,28 +29,42 @@ const {
 const { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } = process.env;
 
 const log = (input, data) => console.log(input, data || "");
-const validateRows = (rows, validationErrors) => {
+const validateRows = (rows, errors) => {
   return rows.map((row, index) => {
     let isValid = true;
     let msg = ``;
-    if (!row['Product ID'] || (row["Product ID"] && isNaN(row["Product ID"]))) {
+    if (!row["Product ID"] || (row["Product ID"] && isNaN(row["Product ID"]))) {
       msg += `INVALID FORMAT - Product ID should be a positive number greater than 0 | `;
       isValid = false;
     }
-    if (!row['author id'] || (row["author id"] && isNaN(row["author id"]))) {
+    if (!row["author id"] || (row["author id"] && isNaN(row["author id"]))) {
       msg += `INVALID FORMAT - author id should be a positive number greater than 0 | `;
       isValid = false;
     }
-    if (!row['Rating'] || (row["Rating"] && isNaN(row["Rating"]) && row["Rating"] <= 5)) {
+    if (row["Title"] && row["Title"].length > MAX_TITLE_SIZE) {
+      msg += `INVALID DATA - title should be less than ${MAX_TITLE_SIZE} characters`;
+      isValid = false;
+    }
+    if (
+      row["Review Text"] &&
+      row["Review Text"].length > MAX_DESCRIPTION_SIZE
+    ) {
+      msg += `INVALID DATA - description should be less than  ${MAX_DESCRIPTION_SIZE} characters`;
+      isValid = false;
+    }
+    if (
+      !row["Rating"] ||
+      (row["Rating"] && isNaN(row["Rating"]) && row["Rating"] <= 5)
+    ) {
       msg += `INVALID FORMAT - Rating should be a postive number greater than 0 and less than 5 |`;
       isValid = false;
     }
     if (!isValid) {
-      validationErrors[`ROW - ${index + 1}`] = {
-          error : msg,
-          data : row,
-          skipped : true
-      }
+      errors[`ROW - ${index + 1}`] = {
+        error: msg,
+        data: row,
+        skipped: true
+      };
       return null;
     }
     return row;
@@ -55,7 +73,10 @@ const validateRows = (rows, validationErrors) => {
 
 exports.dataIngestion = async () => {
   try {
-    console.log(chalk.bold(":: SCRIPT STARTED - Data Ingestion ::\n"));
+    console.log(
+      chalk.bold(":: SCRIPT STARTED - Data Ingestion ::\n"),
+      new Date()
+    );
 
     /**
      * create DB Client
@@ -73,7 +94,7 @@ exports.dataIngestion = async () => {
     });
 
     /**
-     * retrieve and validate data ingestion file 
+     * retrieve and validate data ingestion file
      */
     const RnRDataPath = path.resolve("./scripts/data/reviews_rating_data.csv");
     if (!fs.existsSync(RnRDataPath)) {
@@ -84,10 +105,10 @@ exports.dataIngestion = async () => {
     }
 
     /**
-     * clear previous reports 
+     * clear previous reports
      */
     const pathToReport = "./scripts/data/reports/dataIngestion.json";
-    fs.writeFileSync(path.resolve(pathToReport), JSON.stringify({}), 'utf8');
+    fs.writeFileSync(path.resolve(pathToReport), JSON.stringify({}), "utf8");
 
     /**
      * parse CSV -validate and process
@@ -99,9 +120,9 @@ exports.dataIngestion = async () => {
     }
 
     log(chalk.yellow(`Total rows recieved :: ${rows.length}`));
-    const validationErrors = {};
+    const errors = {};
 
-    rows = _.compact(validateRows(rows, validationErrors));
+    rows = _.compact(validateRows(rows, errors));
 
     log(chalk.yellow(`Total rows after validating :: ${rows.length}\n`));
 
@@ -129,10 +150,14 @@ exports.dataIngestion = async () => {
           0
       });
     });
-    rows=undefined; //dereference memory
+    rows = undefined; //dereference memory
     log(chalk.yellow(`Total products :: ${products.length}`));
     const productsBatches = _.chunk(products, BATCH_SIZE);
-    log(chalk.yellow(`Total Batches generated for products :: ${productsBatches.length}`));
+    log(
+      chalk.yellow(
+        `Total Batches generated for products :: ${productsBatches.length}`
+      )
+    );
 
     const promisesProducts = productsBatches.map((chunk, index) => {
       return client.query(insertEntities(chunk)).catch(err => {
@@ -140,6 +165,10 @@ exports.dataIngestion = async () => {
           `Error Occurred while inserting products! :: BATCH : ${index + 1}`,
           parseError(err)
         );
+        errors[`INTERNAL_ERROR_OCCURED-BATCH${index + 1}`] = {
+          details: parseError(err),
+          batch: JSON.stringify(chunk)
+        };
         process.exit();
       });
     });
@@ -148,7 +177,7 @@ exports.dataIngestion = async () => {
      */
     await Promise.all(promisesProducts);
     log(chalk.bold.green(`products upserted:: ${products.length}\n`));
-    products=undefined; //dereference memory
+    products = undefined; //dereference memory
 
     const allProducts = await client.query(getAllEntities());
     log(chalk.yellow(`total review recieved:: ${reviews.length}`));
@@ -169,6 +198,10 @@ exports.dataIngestion = async () => {
           `Error Occurred while inserting reviews! :: BATCH : ${index + 1}`,
           parseError(err)
         );
+        errors[`INTERNAL_ERROR_OCCURED_REVIEWS-BATCH${index + 1}`] = {
+          details: parseError(err),
+          batch: JSON.stringify(chunk)
+        };
       });
     });
     /**
@@ -177,21 +210,38 @@ exports.dataIngestion = async () => {
     await Promise.all(promisesReviews);
 
     log(chalk.bold.green(`total review upserted:: ${reviews.length}\n`));
-    reviews=undefined; //dereference memory
+    reviews = undefined; //dereference memory
 
-    if (Object.keys(validationErrors).length) {
-        fs.writeFileSync(pathToReport, JSON.stringify({
-            TIME_EXECUTED : new Date(),
-            ERRORS : validationErrors
-        },null,"\t"), 'utf8');
+    if (Object.keys(errors).length) {
+      fs.writeFileSync(
+        pathToReport,
+        JSON.stringify(
+          {
+            TIME_EXECUTED: new Date(),
+            ERRORS: errors
+          },
+          null,
+          "\t"
+        ),
+        "utf8"
+      );
 
       log(
-        chalk.bold.red(`total invalid rows in CSV :: ${Object.keys(validationErrors).length}\n`)
+        chalk.bold.red(
+          `total invalid rows in CSV :: ${Object.keys(errors).length}\n`
+        )
       );
-      log(chalk.bold.cyan(`::check report for detailed errors::\n${pathToReport}\n`))
+      log(
+        chalk.bold.cyan(
+          `::check report for detailed errors::\n${pathToReport}\n`
+        )
+      );
     }
 
-    console.log(chalk.bold(":: SCRIPT ENDED - Data Ingestion ::\n"));
+    console.log(
+      chalk.bold(":: SCRIPT ENDED - Data Ingestion ::\n"),
+      new Date()
+    );
 
     process.exit();
   } catch (error) {

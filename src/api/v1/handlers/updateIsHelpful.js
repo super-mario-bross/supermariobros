@@ -1,4 +1,4 @@
-const { BAD_REQUEST , OK} = require("http-status-codes");
+const { BAD_REQUEST, OK } = require("http-status-codes");
 const errorHandlerFactory = require("../../../utilities/responseHandler/errorHandler");
 /**
  * create review with ratings,title, description
@@ -7,7 +7,7 @@ const errorHandlerFactory = require("../../../utilities/responseHandler/errorHan
 
 module.exports.updateIsHelpful = fastify => async (request, reply) => {
   const { serviceErrorHandler } = errorHandlerFactory(fastify);
-  const { reviewId } =  request.body;
+  const { reviewId } = request.body;
 
   /**
    * Validate product_id
@@ -21,9 +21,9 @@ module.exports.updateIsHelpful = fastify => async (request, reply) => {
     return serviceErrorHandler(BAD_REQUEST, "INVALID_REVIEW_ID", {
       review_id: reviewId
     });
-  };
+  }
 
-   await fastify.reviewRepository.updateReviewById(
+  await fastify.reviewRepository.updateReviewById(
     request.logTrace,
     request.body
   );

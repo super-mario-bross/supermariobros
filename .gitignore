@@ -12,3 +12,4 @@ settings.json
 .history
 files
 coverage
+/scripts/generateData.js
