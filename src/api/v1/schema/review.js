@@ -1,25 +1,27 @@
-const {
-  FULFILLMENT_REQ_TYPE,
-  FACILITY_PICKUP_TYPES,
-  WAREHOUSE_TYPES,
-  FACILITY_TYPES,
-  FACILITY_DAYS
-} = require("../../../utilities/constants");
+// const {
+//   FULFILLMENT_REQ_TYPE,
+//   FACILITY_PICKUP_TYPES,
+//   WAREHOUSE_TYPES,
+//   FACILITY_TYPES,
+//   FACILITY_DAYS
+// } = require("../../../utilities/constants");
 
 
-const updateFulfillmentPolicy = {
+const createReview = {
   body: {
     type: "object",
-    required: ["fulfillmentProvider"],
+    required: ["entity","rating","author"],
     properties: {
-      fulfillmentProvider: { type: "string" },
-      requestType: { type: "string", enum: FULFILLMENT_REQ_TYPE }
+      entity: { type: "string" },
+      author: { type: "number"},
+      title: { type: "string" },
+      reviewDesc: { type: "string" },
+      rating: { type: "number", maximum: 5 , minimum: 1}
     },
     additionalProperties: false
   }
 };
 
 module.exports = {
-  updateFulfillmentPolicy,
-
+  createReview,
 };

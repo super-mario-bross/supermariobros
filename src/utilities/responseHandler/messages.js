@@ -1,9 +1,9 @@
 const Handlebars = require("handlebars");
 
 const Messages = {
-  INVALID_SELLER_ID: {
-    en: "Invalid sellerId {{sellerId}} for tenant {{tenantId}}",
-    es: "SellerId {{sellerId}} no válido para el inquilino {{tenantId}}"
+  INVALID_ENTITY_ID: {
+    en: "Invalid entity {{entity_id}}",
+    es: "EntityIs {{sellerId}} no válido"
   },
   INVALID_FACILITY_INFO: {
     en:

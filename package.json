@@ -33,6 +33,7 @@
     "pino-pretty": "^2.6.1",
     "postgrator": "^3.10.1",
     "qs": "^6.7.0",
+    "sentiment": "^5.0.2",
     "uuid": "^3.3.2"
   },
   "engines": {

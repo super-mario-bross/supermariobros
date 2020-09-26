@@ -1,5 +1,5 @@
 const schema = require("../schema");
-const { createFacility } = require("../handlers/createFacility");
+const { createReview } = require("../handlers/createReview");
 
 
 module.exports = async function(fastify) {
@@ -8,8 +8,8 @@ module.exports = async function(fastify) {
    */
   fastify.route({
     method: "POST",
-    url: "/sellers/:id/logistics/facilities",
-    schema: schema.createFacility,
-    handler: createFacility(fastify)
+    url: "/review/add",
+    schema: schema.createReview,
+    handler: createReview(fastify)
   });
 };
