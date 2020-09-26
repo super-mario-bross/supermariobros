@@ -33,6 +33,8 @@ exports.insertReviewsBulk = reviews => {
     return sql;
 };
 
+exports.getAllReviews = () =>
+  SQL`SELECT entity,rating,sentiment_score FROM rating_n_reviews WHERE 1=1`;
 
 exports.reviewAndRatingByEntityQuery = (options) => {
     const sql = SQL`SELECT * FROM rating_n_reviews`;

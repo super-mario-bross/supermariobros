@@ -21,8 +21,6 @@ const {
   insertReviewsBulk
 } = require("../src/services/dbRepository/v1/queryBuilder/reviewQueries");
 
-const { calculateRating } = require("../src/utilities/ratingCalculator");
-
 const { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } = process.env;
 
 const log = (input, data) => console.log(input, data || "");
@@ -53,8 +51,8 @@ const validateRows = (rows, validationErrors) => {
       msg += ` INVALID FORMAT - author id should be a positive number greater than 0,`;
       isValid = false;
     }
-    if (row["Rating"] && isNaN(row["Rating"])) {
-      msg += ` INVALID FORMAT - Rating should be a postive number greater than 0,`;
+    if (row["Rating"] && isNaN(row["Rating"]) && row["Rating"] <= 5) {
+      msg += ` INVALID FORMAT - Rating should be a postive number greater than 0 and less than 5,`;
       isValid = false;
     }
     if (!isValid) {
@@ -165,8 +163,6 @@ exports.dataIngestion = async () => {
     await Promise.all(promisesReviews);
 
     log(`total review inserted:: ${reviews.length}`);
-
-    const reviewsWithRatings = calculateRating(reviews);
 
     if (validationErrors.length) {
       log(
