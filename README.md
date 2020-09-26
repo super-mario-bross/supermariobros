@@ -1,14 +1,12 @@
-# Seller Domain
+# Ratings & Review
 
-This microservice is responsible for exposing APIs to manage sellers.
+This microservice is responsible for exposing APIs to manage Review and Ratings.
 
 # REST API Definitions
-Documentation for the above APIs are available [here](https://confluence.falabella.com/display/Catalyst/Seller-APIs)
 
 # External Integration
 
 * PostgreSQL Database.
-* Google Pub/Sub.
 
 # Configurations
 The microservice can run by setting the below environment variables.
@@ -33,13 +31,6 @@ Google Cloud Pub/Sub configurations for connection to Google Cloud Pub/Sub.
 **Postgres Set-up**
  - [Binary](https://www.postgresql.org/docs/11/installation.html)
  - [Docker](https://hub.docker.com/_/postgres)
-
-**Google Cloud Pub/Sub**
-Create the below topics in Google Cloud Pub/Sub
-
-
-In-case actual GCP subscription is not available, please refer [here](https://cloud.google.com/pubsub/docs/emulator) 
-for instructions on how to use Pub/Sub Emulator for local testing.
 
 **Clone the git repo**
 
