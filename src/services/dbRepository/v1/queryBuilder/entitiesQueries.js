@@ -60,7 +60,7 @@ exports.updateRatingsBulk = data => {
 }
 
 exports.entityByIdQuery = id => {
-  const sql = SQL`SELECT uuid FROM entities`;
+  const sql = SQL`SELECT * FROM entities`;
   sql.append(SQL` WHERE uuid=${id}`);
   return sql;
 };
