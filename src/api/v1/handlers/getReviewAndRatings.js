@@ -32,7 +32,7 @@ module.exports.getRatingsAndReviews = fastify => async (request, reply) => {
     );
 
     const dataToSend = {
-        summaryData: { entity },
+        summaryData: entity,
         reviewAndRatingsInfo,
         paginationInfo: {
             total: countInfo[0].count
