@@ -99,6 +99,8 @@
     "swagger": "node src/index.js docs | pino-pretty -c -t HH:MM:ss.l",
     "db-init": "node ./dbMigrations/index.js",
     "dev": "nodemon -e js src/index.js | pino-pretty -c -t HH:MM:ss.l",
-    "seed": "node scripts/dataIngestion.js"
+    "seed": "node scripts/dataIngestion.js",
+    "calculate:rating": "node scripts/calculateRating.js"
+
   }
 }

@@ -32,11 +32,13 @@ module.exports.createReview = fastify => async (request, reply) => {
   let dataToCreate = {
     entity: request.body.entity,
     author: request.body.author,
-    title : request.body.title ? request.body.title : null,
-    reviewDesc : request.body.reviewDesc ? request.body.reviewDesc : null,
-    rating : request.body.rating,
-    sentimentScore: request.body.sentimentScore ? request.body.sentimentScore : 0,
-  }
+    title: request.body.title ? request.body.title : null,
+    reviewDesc: request.body.reviewDesc ? request.body.reviewDesc : null,
+    rating: request.body.rating,
+    sentimentScore: request.body.sentimentScore
+      ? request.body.sentimentScore
+      : 0
+  };
 
   const reviewData = await fastify.reviewRepository.create(
     request.logTrace,

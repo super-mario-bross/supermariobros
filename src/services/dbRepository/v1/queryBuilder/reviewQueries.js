@@ -31,6 +31,9 @@ exports.insertReviewsBulk = reviews => {
   return sql;
 };
 
+exports.getAllReviews = () =>
+  SQL`SELECT entity,rating,sentiment_score FROM rating_n_reviews WHERE 1=1`;
+
 exports.entityByIdQuery = id => {
   const sql = SQL`SELECT uuid FROM entities`;
   sql.append(SQL` WHERE uuid=${id}`);
