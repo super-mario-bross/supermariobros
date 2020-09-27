@@ -65,12 +65,6 @@ exports.entityByIdQuery = id => {
   return sql;
 };
 
-exports.entityByProductIdQuery = id => {
-  const sql = SQL`SELECT * FROM entities`;
-  sql.append(SQL` WHERE entity_id=${id}`);
-  return sql;
-};
-
 exports.updateEntityById = data => {
   const sql = SQL`UPDATE entities SET `;
   const updates = [];
