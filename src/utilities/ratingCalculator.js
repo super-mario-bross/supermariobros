@@ -33,5 +33,5 @@ exports.calculateRating = reviews => {
 exports.helpfulnessContentModeration = review =>
   review.title &&
   review.reviewDesc &&
-  review.reviewDesc.length > 50 &&
+  review.reviewDesc.length > 300 &&
   review.sentimentScore > -3;

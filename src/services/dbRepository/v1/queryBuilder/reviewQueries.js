@@ -11,7 +11,9 @@ exports.insertReviewsBulk = reviews => {
                     review_desc,
                     rating,
                     sentiment_score,
-                    is_helpful
+                    is_helpful,
+                    moderation_status,
+                    is_published
                   )
                 VALUES `;
   const rows = [];
@@ -24,7 +26,9 @@ exports.insertReviewsBulk = reviews => {
                  ${review.reviewDesc || null},
                  ${review.rating},
                  ${review.sentimentScore},
-                 ${review.isHelpful || 0})`
+                 ${review.isHelpful || 0},
+                 ${review.moderationStatus || 0},
+                 ${review.isPublished || false})`
     );
   });
   sql.append(sql.glue(rows, " , "));
@@ -42,7 +46,7 @@ exports.getAllReviews = () =>
 
 exports.reviewAndRatingByEntityQuery = options => {
   const sql = SQL`SELECT uuid as review_id,entity,author,title,review_desc, rating, is_helpful,is_not_helpful,sentiment_score,updated_at,created_at FROM rating_n_reviews`;
-  sql.append(SQL` WHERE entity=${options.entity_id}`);
+  sql.append(SQL` WHERE entity=${options.entity_id} AND is_published=true`);
   if (
     !_.isNaN(options.filterByRating) &&
     parseInt(options.filterByRating) > 0

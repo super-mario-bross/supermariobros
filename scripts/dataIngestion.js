@@ -195,7 +195,8 @@ exports.dataIngestion = async () => {
       if (CONTENT_MODERATION && helpfulnessContentModeration(review)) {
         review.isHelpful = 1;
       }
-      console.log(review.isHelpful);
+      review.moderationStatus = "auto";
+      review.isPublished = true;
       delete review.entityId;
       return review;
     });

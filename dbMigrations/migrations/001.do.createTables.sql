@@ -25,6 +25,8 @@ CREATE TABLE rating_n_reviews (
 	rating float NOT NULL,
 	is_helpful integer DEFAULT 0,
 	is_not_helpful integer DEFAULT 0,
+	moderation_status varchar(100),
+	is_published boolean DEFAULT false,
 	sentiment_score integer NOT NULL DEFAULT 0,
 	updated_at timestamp with time zone DEFAULT timezone('UTC'::text, CURRENT_TIMESTAMP),
 	deleted_at timestamp with time zone  DEFAULT NULL,

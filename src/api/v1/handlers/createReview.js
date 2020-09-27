@@ -41,6 +41,14 @@ module.exports.createReview = fastify => async (request, reply) => {
       : 0,
     isHelpful: request.body.isHelpful
   };
+  if (request.body.sentimentScore < -3) {
+    dataToCreate.moderationStatus = "pending";
+  } else {
+    dataToCreate.moderationStatus = "auto";
+  }
+
+  dataToCreate.isPublished =
+    dataToCreate.moderationStatus === "pending" ? false : true;
 
   await fastify.reviewRepository.create(request.logTrace, dataToCreate);
   let entityInfo = await fastify.reviewRepository.getReviewAndRatingByEntity(
