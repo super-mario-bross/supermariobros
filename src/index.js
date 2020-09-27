@@ -57,6 +57,7 @@ const init = () => {
     dir: path.join(__dirname, "api"),
     ignorePattern: /^(__tests__|schema)/
   });
+  fastify.register(require("fastify-cors"), {});
 
   const responseTimeout = Math.trunc(process.env.TIMEOUT_SERVER) || 120000;
   fastify.server.setTimeout(responseTimeout);
@@ -68,14 +69,7 @@ const create = () => {
   const fastify = init();
 
   fastify.register(postgres);
-  fastify.addHook("onSend", (request, reply, payload, next) => {
-    reply.header("Access-Control-Allow-Origin", "*");
-    reply.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin, Cache-Control"
-    );
-    next();
-  });
+
   return fastify;
 };
 
