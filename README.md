@@ -31,6 +31,7 @@ Google Cloud Pub/Sub configurations for connection to Google Cloud Pub/Sub.
 # Project Set-up
 
 **Postgres Set-up**
+ - on local create a DB
  - [Binary](https://www.postgresql.org/docs/11/installation.html)
  - [Docker](https://hub.docker.com/_/postgres)
 
@@ -99,3 +100,21 @@ npm run lint
 npm run lint:fix
 
 ```
+
+#Scripts
+
+**data ingestion**
+ make sure to run - npm run db-init (for any pending migrations)
+ replace the file in the /scripts/data folder
+  ```bash
+  npm run seed
+  ```
+ reports are generated in the /scripts/data/reports folder
+
+**calculate ratings**
+
+ make sure to run - npm run db-init (for any pending migrations)
+  ```bash
+  npm run calculate:rating
+  ```
+ reports are generated in the /scripts/data/reports folder
