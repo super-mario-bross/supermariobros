@@ -12,7 +12,7 @@ module.exports.getRatingsAndReviews = fastify => async (request, reply) => {
   /**
    * Validate product_id
    */
-  const entity = await fastify.entityRepository.getEntityByProductId(
+  const entity = await fastify.entityRepository.getEntityById(
     request.logTrace,
     entity_id
   );
@@ -22,7 +22,6 @@ module.exports.getRatingsAndReviews = fastify => async (request, reply) => {
       entity_id: entity_id
     });
   }
-  request.query.entity_id = entity[0].uuid;
   let countInfo = await fastify.reviewRepository.getReviewAndRatingCount(
     request.logTrace,
     request.query
