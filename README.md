@@ -3,6 +3,7 @@
 This microservice is responsible for exposing APIs to manage Review and Ratings.
 
 # REST API Definitions
+https://app.swaggerhub.com/apis/super-mario/super-mario-bros/1.0.0
 
 # External Integration
 
