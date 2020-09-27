@@ -1,0 +1,4 @@
+@ci-reuse:registry=https://fala.cl/npm/
+//fala.cl/npm/:_auth:$AUTH
+email=$NPM_EMAIL
+strict-ssl=false

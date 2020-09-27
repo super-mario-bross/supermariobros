@@ -14,7 +14,7 @@ module.exports.createReview = fastify => async (request, reply) => {
   /**
    * Validate product_id
    */
-  const entity = await fastify.entityRepository.getEntityById(
+  const entity = await fastify.entityRepository.getEntityByProductId(
     request.logTrace,
     request.body.entity
   );
@@ -30,6 +30,7 @@ module.exports.createReview = fastify => async (request, reply) => {
       entity_id: request.body.entity
     });
   }
+  request.body.entity = entity[0].uuid;
   let dataToCreate = {
     entity: request.body.entity,
     author: request.body.author,

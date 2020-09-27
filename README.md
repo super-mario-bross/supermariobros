@@ -35,7 +35,7 @@ Google Cloud Pub/Sub configurations for connection to Google Cloud Pub/Sub.
 
 **Clone the git repo**
 
-`git clone https://fala.cl/catalyst/core/sellers/development/sellers`
+`git clone git@github.com:super-mario-bross/supermariobros.git`
 
 The template is meant to be run on a **node.js >= 8.x.x** environment.  
 To manage your node.js environments, you can use [nvm](https://github.com/creationix/nvm) 
@@ -70,7 +70,11 @@ $ npm i
 
 ``` bash
 # Navigate to the project root directory.
-cd sellers
+cd supermariobros/
+
+# set your .env and .npmrc local file (folow the examples)
+touch .env
+touch .npmrc
 
 # Install dependencies
 npm install
