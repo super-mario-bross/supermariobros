@@ -19,7 +19,7 @@ module.exports.getProductById = () => async (request, reply) => {
     "6859205"
   ];
   const product = {
-    product_id: faker.random.alphaNumeric(),
+    product_id: request.query.product_id,
     name: faker.commerce.productName(),
     description: faker.commerce.productDescription(),
     price: faker.commerce.price(),

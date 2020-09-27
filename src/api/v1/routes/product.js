@@ -5,7 +5,7 @@ module.exports = async function(fastify) {
   fastify.route({
     method: "GET",
     url: "/product",
-    schema: productSchema.getProductById,
+    schema: productSchema.getProductByIdSchema,
     handler: getProductById(fastify)
   });
 };

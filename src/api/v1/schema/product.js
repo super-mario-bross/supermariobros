@@ -1,6 +1,6 @@
 const { httpResponse } = require("./http-responses");
 
-const getProductById = {
+const getProductByIdSchema = {
   tags: ["Product"],
   response: {
     200: {
@@ -27,5 +27,5 @@ const getProductById = {
 };
 
 module.exports = {
-  getProductById
+  getProductByIdSchema
 };
