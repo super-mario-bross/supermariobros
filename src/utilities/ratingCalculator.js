@@ -1,6 +1,6 @@
 const _ = require("lodash");
 
-module.exports.calculateRating = reviews => {
+exports.calculateRating = reviews => {
   const ratings = {};
   reviews = _.groupBy(reviews, "entity");
   Object.keys(reviews).map(entity => {
@@ -29,3 +29,9 @@ module.exports.calculateRating = reviews => {
 
   return ratings;
 };
+
+exports.helpfulnessContentModeration = review =>
+  review.title &&
+  review.reviewDesc &&
+  review.reviewDesc.length > 50 &&
+  review.sentimentScore > -3;

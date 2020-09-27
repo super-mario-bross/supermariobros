@@ -13,9 +13,14 @@ const chalk = require("chalk");
 
 const { parseError } = require("../src/utilities/index");
 const {
+  helpfulnessContentModeration
+} = require("../src/utilities/ratingCalculator");
+
+const {
   BATCH_SIZE,
   MAX_DESCRIPTION_SIZE,
-  MAX_TITLE_SIZE
+  MAX_TITLE_SIZE,
+  CONTENT_MODERATION
 } = require("../src/utilities/constants");
 
 const {
@@ -187,6 +192,10 @@ exports.dataIngestion = async () => {
         entityId: parseInt(review.entityId)
       }).uuid;
       review.entity = prodUUID;
+      if (CONTENT_MODERATION && helpfulnessContentModeration(review)) {
+        review.isHelpful = 1;
+      }
+      console.log(review.isHelpful);
       delete review.entityId;
       return review;
     });
