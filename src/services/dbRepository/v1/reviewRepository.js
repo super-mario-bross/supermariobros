@@ -123,12 +123,33 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
     }
   };
 
+  const reviewManually = async (logTrace, data, client = fastify.pg) => {
+    fastify.log.debug({
+      traceHeaders: logTrace,
+      message: `Invoking repository to update review manually ${data.reviewId}`
+    });
+    try {
+      const sql = queries.updatePublishmentStatus(data);
+      const result = await client.query(sql);
+      return result.rows;
+    } catch (err) {
+      fastify.log.error({
+        traceHeaders: logTrace,
+        message: "Request Failed for manual review",
+        data: `${data.reviewId}`,
+        err
+      });
+      throw dbError(err);
+    }
+  };
+
   fastify.decorate("reviewRepository", {
     create,
     getReviewById,
     getReviewAndRatingByEntity,
     updateReviewById,
-    getReviewAndRatingCount
+    getReviewAndRatingCount,
+    reviewManually
   });
 
   next();

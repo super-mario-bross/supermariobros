@@ -81,8 +81,29 @@ const updateReviewByUsersReaction = {
   }
 };
 
+const reviewManually = {
+  tags: ["Reviews & Rating"],
+  description: "Used to manually review",
+  response: {
+    200: {
+      type: "object",
+      description: "Manual review successful!"
+    },
+    ...httpResponse
+  },
+  body: {
+    type: "object",
+    required: ["reviewId", "approved"],
+    properties: {
+      reviewId: { type: "string" },
+      approved: { type: "boolean" }
+    }
+  }
+};
+
 module.exports = {
   createReview,
   getReviewsAndRatings,
-  updateReviewByUsersReaction
+  updateReviewByUsersReaction,
+  reviewManually
 };

@@ -1,5 +1,5 @@
 {
-	"TIME_EXECUTED": "2020-09-27T04:46:02.024Z",
+	"TIME_EXECUTED": "2020-09-27T04:52:38.513Z",
 	"ERRORS": {
 		"ROW - 1": {
 			"error": "INVALID FORMAT - Product ID should be a positive number greater than 0 | INVALID FORMAT - author id should be a positive number greater than 0 | ",

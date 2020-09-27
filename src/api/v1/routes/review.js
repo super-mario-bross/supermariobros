@@ -1,6 +1,7 @@
 const schema = require("../schema");
 const { createReview } = require("../handlers/createReview");
 const { getRatingsAndReviews } = require("../handlers/getReviewAndRatings");
+const { reviewManually } = require("../handlers/reviewManually");
 const {
   updateReviewByUsersReaction
 } = require("../handlers/updateReviewByUsersReaction");
@@ -25,5 +26,12 @@ module.exports = async function(fastify) {
     url: "/reviewAndRatings/updateReviewByUsersReaction",
     schema: schema.updateReviewByUsersReaction,
     handler: updateReviewByUsersReaction(fastify)
+  });
+
+  fastify.route({
+    method: "PATCH",
+    url: "/reviewAndRatings/reviewManually",
+    schema: schema.reviewManually,
+    handler: reviewManually(fastify)
   });
 };

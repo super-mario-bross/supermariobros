@@ -117,3 +117,8 @@ exports.getReviewAndRatingCount = options => {
   }
   return sql;
 };
+
+exports.updatePublishmentStatus = data => {
+  const sql = SQL`UPDATE rating_n_reviews SET is_published=${data.approved} WHERE uuid = ${data.reviewId}`;
+  return sql;
+};
