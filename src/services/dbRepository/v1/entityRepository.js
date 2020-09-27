@@ -45,9 +45,31 @@ module.exports = fp(function entity(fastify, options, next) {
     }
   };
 
+  const getEntityByProductId = async (logTrace, id, client = fastify.pg) => {
+    fastify.log.debug({
+      traceHeaders: logTrace,
+      message: `Invoking repository to get Entity by entity_id ${id}`
+    });
+    try {
+      const sql = queries.entityByProductIdQuery(id);
+      const result = await client.query(sql);
+      return result.rows;
+    } catch (err) {
+      fastify.log.error({
+        traceHeaders: logTrace,
+        message: "Request Failed for getting  Entity by entity_id",
+        data: `${id}`,
+        err
+      });
+      console.log(">>>err>>>", err);
+      throw dbError(err);
+    }
+  };
+
   fastify.decorate("entityRepository", {
     getEntityById,
-    updateEntityById
+    updateEntityById,
+    getEntityByProductId
   });
 
   next();
