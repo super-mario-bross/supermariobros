@@ -15,7 +15,6 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
     });
     try {
       reviewData.uuid = uuidv4();
-      console.log(">>>", reviewData);
       const sql = queries.insertReviewsBulk([reviewData]);
       const result = await client.query(sql);
       fastify.log.debug({
