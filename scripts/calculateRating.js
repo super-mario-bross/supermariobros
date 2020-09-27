@@ -1,4 +1,5 @@
 require("dotenv").config();
+const moment = require("moment");
 const { Client } = require("pg");
 const path = require("path");
 const fs = require("fs");
@@ -23,9 +24,10 @@ const log = (input, data) => console.log(input, data || "");
 
 exports.calculateRating = async () => {
   try {
+    const startTime = new Date();
     console.log(
       chalk.bold(":: SCRIPT STARTED - Rating Calculation :: \n"),
-      new Date()
+      startTime
     );
     /**
      * Create DB client
@@ -100,7 +102,7 @@ exports.calculateRating = async () => {
 
     console.log(
       chalk.bold(":: SCRIPT ENDED - Rating Calculation ::"),
-      new Date()
+      `\ntime taken : ${moment(new Date()).diff(startTime)} ms`
     );
 
     process.exit();

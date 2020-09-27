@@ -10,7 +10,7 @@ const uuidv4 = require("uuid/v4");
 const Sentiment = require("sentiment");
 const sentiment = new Sentiment();
 const chalk = require("chalk");
-
+const moment = require("moment");
 const { parseError } = require("../src/utilities/index");
 const {
   helpfulnessContentModeration
@@ -78,9 +78,10 @@ const validateRows = (rows, errors) => {
 
 exports.dataIngestion = async () => {
   try {
+    const startTime = new Date();
     console.log(
       chalk.bold(":: SCRIPT STARTED - Data Ingestion ::\n"),
-      new Date()
+      startTime
     );
 
     /**
@@ -187,19 +188,28 @@ exports.dataIngestion = async () => {
     const allProducts = await client.query(getAllEntities());
     log(chalk.yellow(`total review recieved:: ${reviews.length}`));
 
-    reviews = reviews.map(review => {
-      const prodUUID = _.find(allProducts.rows, {
-        entityId: parseInt(review.entityId)
-      }).uuid;
-      review.entity = prodUUID;
-      if (CONTENT_MODERATION && helpfulnessContentModeration(review)) {
-        review.isHelpful = 1;
-      }
-      review.moderationStatus = "auto";
-      review.isPublished = true;
-      delete review.entityId;
-      return review;
-    });
+    let reviewTracker = {}; //to handle duplicate reviews for the same author
+    reviews = _.compact(
+      reviews.map(review => {
+        if (!reviewTracker[`${review.author}-${review.entityId}`]) {
+          reviewTracker[`${review.author}-${review.entityId}`] = 1;
+        } else {
+          return null;
+        }
+        const prodUUID = _.find(allProducts.rows, {
+          entityId: parseInt(review.entityId)
+        }).uuid;
+        review.entity = prodUUID;
+        if (CONTENT_MODERATION && helpfulnessContentModeration(review)) {
+          review.isHelpful = 1;
+        }
+        review.moderationStatus = "auto";
+        review.isPublished = true;
+        delete review.entityId;
+        return review;
+      })
+    );
+    reviewTracker = undefined;
 
     const reviewBatches = _.chunk(reviews, BATCH_SIZE);
     const promisesReviews = reviewBatches.map((chunk, index) => {
@@ -250,7 +260,7 @@ exports.dataIngestion = async () => {
 
     console.log(
       chalk.bold(":: SCRIPT ENDED - Data Ingestion ::\n"),
-      new Date()
+      `\ntime taken : ${moment(new Date()).diff(startTime)} ms`
     );
 
     process.exit();
