@@ -3,7 +3,7 @@ const Handlebars = require("handlebars");
 const Messages = {
   INVALID_ENTITY_ID: {
     en: "Invalid entity {{entity_id}}",
-    es: "EntityIs {{sellerId}} no válido"
+    es: "EntityIs {{entity_id}} no válido"
   },
   INVALID_REVIEW_ID: {
     en: "Invalid review id {{review_id}}",

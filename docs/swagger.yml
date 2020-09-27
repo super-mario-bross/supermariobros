@@ -36,28 +36,6 @@ paths:
       responses:
         '200':
           schema:
-            '400': &ref_0
-              type: object
-              description: error response
-              additionalProperties: false
-              properties:
-                code:
-                  type: string
-                message:
-                  type: string
-                error:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      field:
-                        type: string
-                      message:
-                        type: string
-            '403': *ref_0
-            '404': *ref_0
-            '409': *ref_0
-            '500': *ref_0
             type: object
             description: Success review created response
             properties:
@@ -117,21 +95,8 @@ paths:
           name: filterByRating
           in: query
       responses:
-        '400':
-          schema: *ref_0
-          description: error response
-        '403':
-          schema: *ref_0
-          description: error response
-        '404':
-          schema: *ref_0
-          description: error response
-        '409':
-          schema: *ref_0
-          description: error response
-        '500':
-          schema: *ref_0
-          description: error response
+        '200':
+          description: Default Response
   /v1/reviewAndRatings/updateReviewByUsersReaction:
     patch:
       tags:
@@ -166,41 +131,46 @@ paths:
                   - is_helpful
                   - is_not_helpful
           description: Succesfully updated user reaction to review
-        '400':
-          schema: *ref_0
-          description: error response
-        '403':
-          schema: *ref_0
-          description: error response
-        '404':
-          schema: *ref_0
-          description: error response
-        '409':
-          schema: *ref_0
-          description: error response
-        '500':
-          schema: *ref_0
-          description: error response
-  /v1/getProductById:
-    get:
+  /v1/reviewAndRatings/reviewManually:
+    patch:
+      description: Used to manually review
       tags:
-        - Product
+        - Reviews & Rating
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            required:
+              - reviewId
+              - approved
+            properties:
+              reviewId:
+                type: string
+              approved:
+                type: boolean
       responses:
         '200':
           schema:
-            '400': *ref_0
-            '403': *ref_0
-            '404': *ref_0
-            '409': *ref_0
-            '500': *ref_0
             type: object
-            description: Success review created response
+            description: Manual review successful!
+          description: Manual review successful!
+  /v1/product:
+    get:
+      tags:
+        - Product
+      parameters:
+        - type: string
+          required: true
+          name: product_id
+          in: query
+      responses:
+        '200':
+          schema:
+            type: object
+            description: Success product fetched
             properties:
-              uuid:
-                type: string
               product_id:
-                type: string
-              entity_id:
                 type: string
               name:
                 type: string
@@ -210,4 +180,4 @@ paths:
                 type: string
               image:
                 type: string
-          description: Success review created response
+          description: Success product fetched

@@ -1,5 +1,3 @@
-const { httpResponse } = require("./http-responses");
-
 const getProductByIdSchema = {
   tags: ["Product"],
   response: {
@@ -12,8 +10,8 @@ const getProductByIdSchema = {
         description: { type: "string" },
         price: { type: "string" },
         image: { type: "string" }
-      },
-      ...httpResponse
+      }
+      // ...httpResponse
     }
   },
   querystring: {
