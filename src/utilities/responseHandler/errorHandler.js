@@ -86,6 +86,7 @@ const errorHandlerFactory = fastify => {
       title: parseMessage(message, variables),
       code: getStatusText(status)
     };
+    console.log("--------", errorInfo);
     throw new ApiError(errorInfo);
   };
 

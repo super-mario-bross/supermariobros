@@ -1,5 +1,3 @@
-const { httpResponse } = require("./http-responses");
-
 const createReview = {
   tags: ["Reviews & Rating"],
   response: {
@@ -14,8 +12,8 @@ const createReview = {
         rating: { type: "number", maximum: 5, minimum: 1 },
         sentimentScore: { type: "string" },
         uuid: { type: "string" }
-      },
-      ...httpResponse
+      }
+      // ...httpResponse
     }
   },
   body: {
@@ -34,9 +32,9 @@ const createReview = {
 
 const getReviewsAndRatings = {
   tags: ["Reviews & Rating"],
-  response: {
-    ...httpResponse
-  },
+  // response: {
+  //   ...httpResponse
+  // },
   querystring: {
     type: "object",
     required: ["entity_id"],
@@ -68,8 +66,8 @@ const updateReviewByUsersReaction = {
           enum: ["is_helpful", "is_not_helpful"]
         }
       }
-    },
-    ...httpResponse
+    }
+    // ...httpResponse
   },
   body: {
     type: "object",
@@ -88,8 +86,8 @@ const reviewManually = {
     200: {
       type: "object",
       description: "Manual review successful!"
-    },
-    ...httpResponse
+    }
+    // ...httpResponse
   },
   body: {
     type: "object",
