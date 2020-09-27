@@ -104,6 +104,7 @@ npm run lint:fix
 #Scripts
 
 **data ingestion**
+
  make sure to run - npm run db-init (for any pending migrations)
  replace the file in the /scripts/data folder
   ```bash
