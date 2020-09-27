@@ -37,7 +37,9 @@ exports.insertReviewsBulk = reviews => {
                         review_desc = EXCLUDED.review_desc,
                         rating = EXCLUDED.rating,
                         sentiment_score = EXCLUDED.sentiment_score,
-                        is_helpful = EXCLUDED.is_helpful`);
+                        is_helpful = EXCLUDED.is_helpful,
+                        moderation_status = EXCLUDED.moderation_status,
+                        is_published = EXCLUDED.is_published`);
   return sql;
 };
 
@@ -108,7 +110,7 @@ exports.updateReviewById = data => {
 
 exports.getReviewAndRatingCount = options => {
   const sql = SQL`SELECT COUNT(uuid) from rating_n_reviews `;
-  sql.append(SQL` WHERE entity=${options.entityId}`);
+  sql.append(SQL` WHERE entity=${options.entityId} AND is_published=true`);
   if (
     !_.isNaN(options.filterByRating) &&
     parseInt(options.filterByRating) > 0
