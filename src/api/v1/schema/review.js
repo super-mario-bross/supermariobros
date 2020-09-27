@@ -61,10 +61,8 @@ const updateReviewByUsersReaction = {
       description: "Succesfully updated user reaction to review",
       properties: {
         reviewId: { type: "string" },
-        userReaction: {
-          type: "string",
-          enum: ["is_helpful", "is_not_helpful"]
-        }
+        is_helpful: { type: "number" },
+        is_not_helpful: { type: "number" }
       }
     }
     // ...httpResponse

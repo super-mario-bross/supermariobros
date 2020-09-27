@@ -30,5 +30,13 @@ module.exports.updateReviewByUsersReaction = fastify => async (
     request.logTrace,
     request.body
   );
-  reply.code(OK).send(request.body);
+  const reviewData = await fastify.reviewRepository.getReviewById(
+    request.logTrace,
+    reviewId
+  );
+  reply.code(OK).send({
+    reviewId,
+    is_helpful: reviewData[0].isHelpful,
+    is_not_helpful: reviewData[0].isNotHelpful
+  });
 };

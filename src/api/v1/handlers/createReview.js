@@ -31,6 +31,7 @@ module.exports.createReview = fastify => async (request, reply) => {
     });
   }
   request.body.entity = entity[0].uuid;
+
   let dataToCreate = {
     entity: request.body.entity,
     author: request.body.author,

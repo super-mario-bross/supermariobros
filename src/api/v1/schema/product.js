@@ -5,22 +5,19 @@ const getProductByIdSchema = {
       type: "object",
       description: "Success product fetched",
       properties: {
-        product_id: { type: "string" },
-        name: { type: "string" },
-        description: { type: "string" },
-        price: { type: "string" },
-        image: { type: "string" }
+        result: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              uuid: { type: "string" },
+              entity_id: { type: "string" }
+            }
+          }
+        }
       }
       // ...httpResponse
     }
-  },
-  querystring: {
-    type: "object",
-    required: ["product_id"],
-    properties: {
-      product_id: { type: "string" }
-    },
-    additionalProperties: false
   }
 };
 
