@@ -1,3 +1,4 @@
 module.exports = {
-  ...require("./review")
+  ...require("./review"),
+  ...require("./product")
 };

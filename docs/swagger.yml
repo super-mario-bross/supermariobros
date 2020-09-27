@@ -181,3 +181,33 @@ paths:
         '500':
           schema: *ref_0
           description: error response
+  /v1/getProductById:
+    get:
+      tags:
+        - Product
+      responses:
+        '200':
+          schema:
+            '400': *ref_0
+            '403': *ref_0
+            '404': *ref_0
+            '409': *ref_0
+            '500': *ref_0
+            type: object
+            description: Success review created response
+            properties:
+              uuid:
+                type: string
+              product_id:
+                type: string
+              entity_id:
+                type: string
+              name:
+                type: string
+              description:
+                type: string
+              price:
+                type: string
+              image:
+                type: string
+          description: Success review created response
