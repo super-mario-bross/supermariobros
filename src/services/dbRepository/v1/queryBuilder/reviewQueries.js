@@ -46,15 +46,15 @@ exports.getAllReviews = () =>
 
 exports.reviewAndRatingByEntityQuery = options => {
   const sql = SQL`SELECT uuid as review_id,entity,author,title,review_desc, rating, is_helpful,is_not_helpful,sentiment_score,updated_at,created_at FROM rating_n_reviews`;
-  sql.append(SQL` WHERE entity=${options.entity_id} AND is_published=true`);
+  sql.append(SQL` WHERE entity=${options.entityId} AND is_published=true`);
   if (
     !_.isNaN(options.filterByRating) &&
     parseInt(options.filterByRating) > 0
   ) {
     sql.append(SQL` AND rating=${parseInt(options.filterByRating)}`);
   }
-  if (options.sort_key) {
-    switch (options.sort_key) {
+  if (options.sortKey) {
+    switch (options.sortKey) {
       case "created_at":
         sql.append(SQL` ORDER BY created_at`);
         break;
@@ -71,8 +71,8 @@ exports.reviewAndRatingByEntityQuery = options => {
         break;
     }
   }
-  if (options.sort_order) {
-    options.sort_order === "ASC"
+  if (options.sortOrder) {
+    options.sortOrder === "ASC"
       ? sql.append(SQL` ASC`)
       : sql.append(SQL` DESC`);
   }
@@ -108,7 +108,7 @@ exports.updateReviewById = data => {
 
 exports.getReviewAndRatingCount = options => {
   const sql = SQL`SELECT COUNT(uuid) from rating_n_reviews `;
-  sql.append(SQL` WHERE entity=${options.entity_id}`);
+  sql.append(SQL` WHERE entity=${options.entityId}`);
   if (
     !_.isNaN(options.filterByRating) &&
     parseInt(options.filterByRating) > 0

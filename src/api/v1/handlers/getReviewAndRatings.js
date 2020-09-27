@@ -7,22 +7,22 @@ const errorHandlerFactory = require("../../../utilities/responseHandler/errorHan
 
 module.exports.getRatingsAndReviews = fastify => async (request, reply) => {
   const { serviceErrorHandler } = errorHandlerFactory(fastify);
-  const { entity_id } = request.query;
+  const { entityId } = request.query;
 
   /**
    * Validate product_id
    */
   const entity = await fastify.entityRepository.getEntityByProductId(
     request.logTrace,
-    entity_id
+    entityId
   );
 
   if (!entity.length) {
     return serviceErrorHandler(BAD_REQUEST, "INVALID_ENTITY_ID", {
-      entity_id: entity_id
+      entity_id: entityId
     });
   }
-  request.query.entity_id = entity[0].uuid;
+  request.query.entityId = entity[0].uuid;
   let countInfo = await fastify.reviewRepository.getReviewAndRatingCount(
     request.logTrace,
     request.query
@@ -33,7 +33,7 @@ module.exports.getRatingsAndReviews = fastify => async (request, reply) => {
   );
 
   const dataToSend = {
-    summaryData: entity,
+    summaryData: entity[0],
     reviewAndRatingsInfo,
     paginationInfo: {
       total: countInfo[0].count

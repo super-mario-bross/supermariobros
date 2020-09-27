@@ -36,7 +36,7 @@ module.exports.updateReviewByUsersReaction = fastify => async (
   );
   reply.code(OK).send({
     reviewId,
-    is_helpful: reviewData[0].isHelpful,
-    is_not_helpful: reviewData[0].isNotHelpful
+    isHelpful: reviewData[0].isHelpful,
+    isNotHelpful: reviewData[0].isNotHelpful
   });
 };

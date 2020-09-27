@@ -61,7 +61,7 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
   ) => {
     fastify.log.debug({
       traceHeaders: logTrace,
-      message: `Invoking repository to get review and ratings by entity_id ${options.entity_id}`
+      message: `Invoking repository to get review and ratings by entity_id ${options.entityId}`
     });
     try {
       const sql = queries.reviewAndRatingByEntityQuery(options);
@@ -71,7 +71,7 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
       fastify.log.error({
         traceHeaders: logTrace,
         message: "Request Failed for getting  review and ratings by entity_id",
-        data: `${options.entity_id}`,
+        data: `${options.entityId}`,
         err
       });
       throw dbError(err);
@@ -105,7 +105,7 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
   ) => {
     fastify.log.debug({
       traceHeaders: logTrace,
-      message: `Invoking repository to get review and ratings count by entity_id ${options.entity_id}`
+      message: `Invoking repository to get review and ratings count by entity_id ${options.entityId}`
     });
     try {
       const sql = queries.getReviewAndRatingCount(options);
@@ -116,7 +116,7 @@ module.exports = fp(function reviewAndRatings(fastify, options, next) {
         traceHeaders: logTrace,
         message:
           "Request Failed for getting  review and ratings count by entity_id",
-        data: `${options.entity_id}`,
+        data: `${options.entityId}`,
         err
       });
       throw dbError(err);

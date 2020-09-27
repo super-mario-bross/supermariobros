@@ -37,16 +37,16 @@ const getReviewsAndRatings = {
   // },
   querystring: {
     type: "object",
-    required: ["entity_id"],
+    required: ["entityId"],
     properties: {
-      entity_id: { type: "string" },
+      entityId: { type: "string" },
       limit: { type: "string" },
       offset: { type: "string" },
-      sort_key: {
+      sortKey: {
         type: "string",
         enum: ["created_at", "is_helpful", "is_not_helpful", "rating"]
       },
-      sort_order: { type: "string", enum: ["ASC", "DESC"] },
+      sortOrder: { type: "string", enum: ["ASC", "DESC"] },
       filterByRating: { type: "string", maximum: 5, minimum: 1 }
     },
     additionalProperties: false
@@ -61,8 +61,8 @@ const updateReviewByUsersReaction = {
       description: "Succesfully updated user reaction to review",
       properties: {
         reviewId: { type: "string" },
-        is_helpful: { type: "number" },
-        is_not_helpful: { type: "number" }
+        isHelpful: { type: "number" },
+        isNotHelpful: { type: "number" }
       }
     }
     // ...httpResponse
